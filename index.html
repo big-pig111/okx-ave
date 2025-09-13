@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XLayer Monitor - 专业级区块链监控系统</title>
+    <meta name="description" content="企业级X Layer区块链监控解决方案，为专业投资者提供实时数据分析和风险管控">
+    <meta name="keywords" content="X Layer, 区块链监控, DeFi分析, 专业投资工具, 风险管理">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234338ca'/><path d='M30,60 Q50,80 70,60 M30,40 Q50,20 70,40 M30,60 L70,60 M30,40 L70,40' stroke='white' stroke-width='5' fill='none'/></svg>">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4338ca;
+            --primary-light: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --dark-bg: #0f121b;
+            --dark-surface: #171b29;
+            --dark-surface-2: #232a40;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --gradient-1: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
+            --gradient-2: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            --gradient-3: linear-gradient(135deg, #4338ca 0%, #8b5cf6 100%);
+            --gradient-4: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(67, 56, 202, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 18, 27, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled {
+            background: rgba(15, 18, 27, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 72px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.03);
+        }
+
+        .logo span {
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            margin-right: 0.8rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-light);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-2);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 80px 0 40px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%234338ca" stop-opacity="0.2"/><stop offset="100%" stop-color="%234338ca" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="300" fill="url(%23a)"/><circle cx="800" cy="800" r="400" fill="url(%23a)"/></svg>') no-repeat center center;
+            background-size: cover;
+            opacity: 0.6;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 5rem;
+        }
+
+        .btn {
+            padding: 1rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-3);
+            color: white;
+            box-shadow: 0 4px 20px rgba(67, 56, 202, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(67, 56, 202, 0.4);
+        }
+
+        .btn-primary:hover::after {
+            left: 100%;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.8rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.8rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 8rem 0;
+            position: relative;
+        }
+
+        .section-dark {
+            background: var(--dark-surface);
+            position: relative;
+        }
+
+        .section-dark::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: var(--dark-surface);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 1.8rem;
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Technology Section */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .tech-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(51, 65, 85, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .tech-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-light);
+        }
+
+        .tech-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .tech-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Roadmap */
+        .roadmap {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .roadmap::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gradient-1);
+            transform: translateX(-50%);
+        }
+
+        .roadmap-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5rem;
+            position: relative;
+        }
+
+        .roadmap-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .roadmap-content {
+            flex: 1;
+            max-width: 450px;
+            background: var(--dark-surface);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 0 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .roadmap-item:nth-child(even) .roadmap-content {
+            margin-left: 2rem;
+            margin-right: 2rem;
+        }
+
+        .roadmap-phase {
+            color: var(--primary-light);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 4px;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .roadmap-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .roadmap-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .roadmap-dot {
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid var(--dark-bg);
+            box-shadow: 0 0 0 4px rgba(67, 56, 202, 0.2);
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .team-card {
+            background: var(--dark-surface);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .team-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            margin: 0 auto 1.8rem;
+            background: var(--gradient-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .team-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-role {
+            color: var(--primary-light);
+            font-weight: 500;
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .team-bio {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* FAQ Section */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--dark-surface);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 12px;
+            margin-bottom: 1.2rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .faq-question {
+            padding: 1.5rem 2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .faq-question h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .faq-icon {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+            color: var(--primary-light);
+        }
+
+        .faq-answer {
+            padding: 0 2rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 2rem 1.8rem;
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .roadmap::before {
+                left: 30px;
+            }
+
+            .roadmap-item {
+                flex-direction: column !important;
+                align-items: flex-start;
+                padding-left: 5rem;
+            }
+
+            .roadmap-content {
+                margin: 0 !important;
+                max-width: 100%;
+            }
+
+            .roadmap-dot {
+                left: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: clamp(2.2rem, 6vw, 3.5rem);
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+                max-width: 300px;
+            }
+
+            .features-grid,
+            .tech-grid,
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 576px) {
+            .section {
+                padding: 5rem 0;
+            }
+
+            .section-header {
+                margin-bottom: 3rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+
+            .stat-card {
+                padding: 1.2rem 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.8rem;
+            }
+
+            .roadmap-item {
+                padding-left: 3rem;
+            }
+        }
+
+        /* Animations & Effects */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Scroll Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 72px;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--gradient-3);
+            z-index: 999;
+            transition: width 0.3s ease;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(67, 56, 202, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav-container">
+            <a href="#" class="logo">
+                <span>XLayer</span> Monitor
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#features">功能特性</a></li>
+                <li><a href="#technology">技术架构</a></li>
+                <li><a href="#roadmap">发展路线</a></li>
+                <li><a href="#team">团队</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-badge" data-aos="fade-up">专业级区块链监控解决方案</div>
+            <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">
+                实时洞察<br>X Layer 生态
+            </h1>
+            <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
+                为专业投资机构和个人投资者提供X Layer生态实时数据监控、风险评估与投资决策支持，
+                助您把握市场动态，规避潜在风险。
+            </p>
+            <div class="hero-buttons" data-aos="fade-up" data-aos-delay="300">
+                <a href="#features" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i> 产品演示
+                </a>
+                <a href="#technology" class="btn btn-secondary">
+                    <i class="fas fa-code"></i> 技术架构
+                </a>
+            </div>
+            <div class="hero-stats" data-aos="fade-up" data-aos-delay="400">
+                <div class="stat-card float">
+                    <span class="stat-number">24/7</span>
+                    <div class="stat-label">实时监控</div>
+                </div>
+                <div class="stat-card float">
+                    <span class="stat-number">99.9%</span>
+                    <div class="stat-label">系统稳定性</div>
+                </div>
+                <div class="stat-card float">
+                    <span class="stat-number">&lt;30s</span>
+                    <div class="stat-label">数据延迟</div>
+                </div>
+                <div class="stat-card float">
+                    <span class="stat-number">Multi-Chain</span>
+                    <div class="stat-label">跨链支持</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section section-dark">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <div class="section-badge">核心能力</div>
+                <h2 class="section-title">产品功能特性</h2>
+                <p class="section-subtitle">
+                    专业级监控解决方案，为机构投资者提供完整的数据分析与风险管控体系，
+                    助您在复杂的区块链生态中把握投资机会。
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">实时数据流</h3>
+                    <p class="feature-description">
+                        基于多源数据聚合的实时监控架构，整合链上数据与第三方API，提供30秒级数据刷新频率，
+                        确保信息时效性与准确性，不错过任何市场变动。
+                    </p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">风险量化模型</h3>
+                    <p class="feature-description">
+                        采用多维度风险评估框架，涵盖合约安全性、流动性深度、持币集中度等关键指标，
+                        为投资决策提供量化风险评级，助您规避潜在风险。
+                    </p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3 class="feature-title">定制化推送</h3>
+                    <p class="feature-description">
+                        支持多维度筛选条件配置，包括市值区间、流动性阈值、风险评级等参数，
+                        实现精准的投资机会推送与提醒，不错过任何潜在机会。
+                    </p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3 class="feature-title">市场分析引擎</h3>
+                    <p class="feature-description">
+                        集成技术分析指标与基本面数据，提供市值追踪、交易量分析、价格走势预测等功能，
+                        辅助投资时机判断，提升决策质量。
+                    </p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3 class="feature-title">策略配置中心</h3>
+                    <p class="feature-description">
+                        提供灵活的策略参数配置界面，支持流动性阈值、市值区间、风险等级等多维度筛选条件的个性化设定，
+                        满足不同投资者的策略需求。
+                    </p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="feature-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3 class="feature-title">生态集成分析</h3>
+                    <p class="feature-description">
+                        深度整合项目生态信息，包括官方渠道、社区数据、开发活跃度等维度，
+                        为投资决策提供全面的背景信息，助您全面了解项目价值。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technology" class="section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <div class="section-badge">技术架构</div>
+                <h2 class="section-title">企业级技术栈</h2>
+                <p class="section-subtitle">
+                    基于分布式架构设计，确保系统高可用性与数据一致性，为专业投资者提供稳定可靠的服务
+                </p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="tech-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3 class="tech-name">分布式计算</h3>
+                    <p class="tech-description">基于Node.js构建的高并发处理架构，支持水平扩展与负载均衡，确保系统稳定性</p>
+                </div>
+                <div class="tech-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="tech-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3 class="tech-name">消息队列</h3>
+                    <p class="tech-description">采用事件驱动架构，确保数据推送的实时性与可靠性，支持高并发场景</p>
+                </div>
+                <div class="tech-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="tech-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h3 class="tech-name">区块链接口</h3>
+                    <p class="tech-description">直连X Layer节点，提供原生区块链数据访问能力，确保数据原始性</p>
+                </div>
+                <div class="tech-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="tech-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="tech-name">数据聚合</h3>
+                    <p class="tech-description">多源数据整合平台，集成链上数据与第三方API服务，确保数据全面性</p>
+                </div>
+                <div class="tech-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="tech-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="tech-name">安全框架</h3>
+                    <p class="tech-description">多层安全防护体系，包含数据加密、访问控制与审计日志，保障数据安全</p>
+                </div>
+                <div class="tech-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="tech-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="tech-name">监控运维</h3>
+                    <p class="tech-description">全链路监控系统，实时追踪系统性能与服务健康状态，确保服务可用性</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="section section-dark">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <div class="section-badge">产品规划</div>
+                <h2 class="section-title">发展路线图</h2>
+                <p class="section-subtitle">
+                    基于市场需求驱动的产品演进策略，构建完整的监控生态体系，持续为用户创造价值
+                </p>
+            </div>
+            <div class="roadmap">
+                <div class="roadmap-item" data-aos="fade-right">
+                    <div class="roadmap-content">
+                        <div class="roadmap-phase">Phase 1 - 已交付</div>
+                        <h3 class="roadmap-title">基础监控平台</h3>
+                        <p class="roadmap-description">
+                            构建X Layer生态监控基础设施，实现实时数据采集、处理与推送功能，建立稳定的数据流水线架构，
+                            提供基础的市场监控与告警能力。
+                        </p>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+                <div class="roadmap-item" data-aos="fade-left">
+                    <div class="roadmap-content">
+                        <div class="roadmap-phase">Phase 2 - 开发中</div>
+                        <h3 class="roadmap-title">量化分析系统</h3>
+                        <p class="roadmap-description">
+                            集成专业数据源，构建多维度风险评估模型，提供量化投资决策支持与市场洞察分析，
+                            实现风险评级与投资机会识别。
+                        </p>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+                <div class="roadmap-item" data-aos="fade-right">
+                    <div class="roadmap-content">
+                        <div class="roadmap-phase">Phase 3 - 规划中</div>
+                        <h3 class="roadmap-title">跨链生态扩展</h3>
+                        <p class="roadmap-description">
+                            扩展至Ethereum、BSC、Polygon等主流公链，建立统一的跨链监控体系与数据标准化协议，
+                            提供多链数据对比分析能力。
+                        </p>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+                <div class="roadmap-item" data-aos="fade-left">
+                    <div class="roadmap-content">
+                        <div class="roadmap-phase">Phase 4 - 研发中</div>
+                        <h3 class="roadmap-title">机器学习引擎</h3>
+                        <p class="roadmap-description">
+                            基于历史数据训练预测模型，提供趋势分析、异常检测与投资机会识别等高级分析功能，
+                            辅助用户做出更精准的投资决策。
+                        </p>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+                <div class="roadmap-item" data-aos="fade-right">
+                    <div class="roadmap-content">
+                        <div class="roadmap-phase">Phase 5 - 愿景</div>
+                        <h3 class="roadmap-title">投资生态平台</h3>
+                        <p class="roadmap-description">
+                            构建完整的DeFi投资基础设施，整合策略执行、风险管理、收益优化等功能模块，
+                            形成闭环投资生态系统。
+                        </p>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <div class="section-badge">核心团队</div>
+                <h2 class="section-title">专业团队背景</h2>
+                <p class="section-subtitle">
+                    来自顶级科技公司与金融机构的专业团队，具备丰富的区块链与量化投资经验，
+                    致力于打造专业级区块链监控解决方案
+                </p>
+            </div>
+            <div class="team-grid">
+                <div class="team-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="team-avatar">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="team-name">张明宇</h3>
+                    <div class="team-role">技术负责人</div>
+                    <p class="team-bio">
+                        前Google高级工程师，专注分布式系统设计与区块链基础设施建设，
+                        具备大规模系统架构经验，曾主导多个亿级用户产品的技术架构设计。
+                    </p>
+                </div>
+                <div class="team-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="team-avatar">
+                        <i class="fas fa-chart-area"></i>
+                    </div>
+                    <h3 class="team-name">李思远</h3>
+                    <div class="team-role">量化分析师</div>
+                    <p class="team-bio">
+                        前摩根士丹利量化分析师，专业从事金融数据建模与风险管理，
+                        拥有丰富的机构级投资策略开发经验，精通量化模型构建与市场分析。
+                    </p>
+                </div>
+                <div class="team-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="team-avatar">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="team-name">王佳宁</h3>
+                    <div class="team-role">产品负责人</div>
+                    <p class="team-bio">
+                        前币安产品经理，深度理解加密货币市场需求，专注于构建专业级交易与分析工具，
+                        擅长将复杂的技术能力转化为用户友好的产品体验。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section section-dark">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <div class="section-badge">常见问题</div>
+                <h2 class="section-title">产品问答</h2>
+                <p class="section-subtitle">
+                    关于产品功能与技术实现的专业解答，帮助您更好地了解我们的解决方案
+                </p>
+            </div>
+            <div class="faq-container">
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="faq-question">
+                        <h3>系统的数据来源与可靠性如何保证？</h3>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>
+                            系统采用多源数据聚合架构，直连X Layer节点获取原生链上数据，同时集成专业数据提供商API，
+                            通过交叉验证确保数据准确性。所有数据源均具备企业级可靠性保障，系统内置数据校验机制，
+                            可自动识别并修复异常数据。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="faq-question">
+                        <h3>风险评估模型的技术原理是什么？</h3>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>
+                            我们构建了多维度风险量化模型，涵盖智能合约安全性、流动性深度、持币集中度、交易模式等关键指标。
+                            通过机器学习算法对历史数据进行训练，识别风险特征与市场模式，实现风险的量化评估与预警。
+                            模型参数定期更新，以适应市场变化。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="faq-question">
+                        <h3>系统支持哪些定制化配置选项？</h3>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>
+                            平台提供灵活的策略配置界面，支持市值区间、流动性阈值、风险等级、交易量要求等多维度筛选条件。
+                            用户可根据投资策略进行个性化设定，创建自定义监控面板，设置特定条件的告警规则，
+                            实现精准的投资机会筛选与风险监控。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
+                    <div class="faq-question">
+                        <h3>产品的商业模式与定价策略？</h3>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>
+                            基础监控服务免费提供，高级功能采用订阅制收费模式。包括深度数据分析、多链支持、API接入、
+                            定制化报告等专业功能。具体定价基于使用规模与功能需求确定，提供个人版、团队版与企业版三种方案，
+                            满足不同用户群体的需求。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
+                    <div class="faq-question">
+                        <h3>如何确保数据安全与隐私保护？</h3>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>
+                            系统采用企业级安全架构，包括数据加密传输、访问权限控制、安全审计日志等多层防护措施。
+                            严格遵循数据保护法规，所有用户数据均采用加密存储，系统操作全程留痕，确保用户隐私信息的安全性与合规性。
+                            我们不会向第三方分享用户的任何私人数据与配置信息。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            mirror: false
+        });
+
+        // Header scroll effect
+        const header = document.getElementById('header');
+        const progressBar = document.getElementById('progressBar');
+        const backToTop = document.getElementById('backToTop');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.querySelector('.nav-menu');
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+
+            // Update progress bar
+            progressBar.style.width = scrollPercent + '%';
+
+            // Header background effect
+            if (scrollTop > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+
+            // Back to top button
+            if (scrollTop > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        // Back to top functionality
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // FAQ functionality
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                // Close other items
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                // Toggle current item
+                item.classList.toggle('active');
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerHeight = header.offsetHeight;
+                    const targetPosition = target.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Close mobile menu if open
+                    if (window.innerWidth <= 768) {
+                        navMenu.style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        // Mobile menu functionality
+        mobileMenuBtn.addEventListener('click', () => {
+            if (navMenu.style.display === 'flex') {
+                navMenu.style.display = 'none';
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            } else {
+                navMenu.style.display = 'flex';
+                navMenu.style.flexDirection = 'column';
+                navMenu.style.position = 'absolute';
+                navMenu.style.top = '72px';
+                navMenu.style.left = '0';
+                navMenu.style.right = '0';
+                navMenu.style.background = 'var(--dark-surface)';
+                navMenu.style.padding = '2rem';
+                navMenu.style.gap = '1.5rem';
+                navMenu.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+                mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            }
+        });
+
+        // Handle window resize for mobile menu
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                navMenu.style.display = 'flex';
+                navMenu.style.flexDirection = 'row';
+                navMenu.style.position = 'static';
+                navMenu.style.top = 'auto';
+                navMenu.style.left = 'auto';
+                navMenu.style.right = 'auto';
+                navMenu.style.background = 'none';
+                navMenu.style.padding = '0';
+                navMenu.style.gap = '2.5rem';
+                navMenu.style.boxShadow = 'none';
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            } else {
+                navMenu.style.display = 'none';
+            }
+        });
+
+        // Counter animation for hero stats
+        const animateCounters = () => {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200;
+
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = counter.innerText;
+                    const count = +counter.innerText.replace(/[^0-9.]/g, '');
+                    let targetNum;
+
+                    // Handle different target formats
+                    if (target.includes('24/7')) {
+                        return; // Skip animation for non-numeric values
+                    } else if (target.includes('99.9%')) {
+                        targetNum = 99.9;
+                    } else if (target.includes('<30s')) {
+                        return; // Skip animation for non-numeric values
+                    } else {
+                        return; // Skip animation for other non-numeric values
+                    }
+
+                    const inc = targetNum / speed;
+
+                    if (count < targetNum) {
+                        counter.innerText = Math.ceil(count + inc) + (target.includes('%') ? '%' : '');
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+
+                // Start animation when element is in view
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            updateCount();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+
+                observer.observe(counter);
+            });
+        };
+
+        // Initialize counter animation
+        animateCounters();
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>
