@@ -20,6 +20,7 @@
     .actions { display:flex; align-items:center; gap:10px; }
     .btn { padding:8px 12px; border:1px solid var(--border); border-radius:10px; color:var(--text); background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)); cursor:pointer; }
     .btn.primary { border-color: #2d5fff; background:#1a2960; }
+    .btn.sm { padding:4px 8px; font-size:12px; border-radius:8px; }
     main { display:grid; grid-template-columns: 260px 1fr; gap:24px; }
     aside { position:sticky; top:84px; align-self:start; padding:16px; border:1px solid var(--border); border-radius:12px; background:var(--card); max-height: calc(100vh - 120px); overflow:auto; }
     aside h4 { margin:6px 0 10px; color:var(--muted); font-weight:600; font-size:13px; letter-spacing:.4px; }
@@ -37,6 +38,9 @@
     .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
     .badge { display:inline-block; padding:3px 8px; border-radius:999px; font-size:12px; background:#12204a; border:1px solid var(--border); color:#cfe2ff; }
     footer { text-align:center; color:var(--muted); padding:26px 0 50px; }
+    footer .social { display:inline-flex; gap:10px; align-items:center; margin-left:8px; }
+    footer .social a { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border:1px solid var(--border); border-radius:6px; background:#0d1430; color:#cfe2ff; }
+    footer .social a:hover { background:#111937; }
     .lang-switch { border:1px solid var(--border); border-radius:10px; overflow:hidden; }
     .lang-switch button { background:none; border:none; color:var(--muted); padding:8px 10px; cursor:pointer; }
     .lang-switch button.active { color:var(--text); background:#111937; }
@@ -56,6 +60,7 @@
           <button id="btn-zh" class="active" data-lang="zh" aria-selected="true">中文</button>
           <button id="btn-en" data-lang="en" aria-selected="false">English</button>
         </div>
+        <a class="btn" href="https://x.com/xaiai_bot?s=21" target="_blank" aria-label="X (Twitter)">X / Twitter</a>
         <a class="btn" href="/api.html" target="_blank">API</a>
         <a class="btn primary" href="/index.html">Launch App</a>
       </div>
@@ -67,14 +72,20 @@
       <aside>
         <h4 data-i18n="toc">目录</h4>
         <nav class="toc">
+          <a href="https://x.com/xaiai_bot?s=21" target="_blank" data-i18n="i_follow">关注 X / Twitter</a>
           <a href="#intro" data-i18n="i_intro">1. 项目简介</a>
           <a href="#vision" data-i18n="i_vision">2. 愿景与目标</a>
           <a href="#overview" data-i18n="i_overview">3. 核心能力</a>
           <a href="#arch" data-i18n="i_arch">4. 系统架构</a>
           <a href="#api" data-i18n="i_api">5. API 与安全</a>
           <a href="#telegram" data-i18n="i_tg">6. Telegram 集成</a>
-          <a href="#roadmap" data-i18n="i_roadmap">7. 路线图</a>
-          <a href="#legal" data-i18n="i_legal">8. 法律与合规</a>
+          <a href="#pricing" data-i18n="i_pricing">7. 定价与套餐</a>
+          <a href="#privacy" data-i18n="i_privacy">8. 数据与隐私</a>
+          <a href="#security" data-i18n="i_security">9. 安全设计</a>
+          <a href="#community" data-i18n="i_community">10. 社区与贡献</a>
+          <a href="#faq" data-i18n="i_faq">11. 常见问题</a>
+          <a href="#roadmap" data-i18n="i_roadmap">12. 路线图</a>
+          <a href="#legal" data-i18n="i_legal">13. 法律与合规</a>
         </nav>
       </aside>
 
@@ -91,6 +102,7 @@
                 <li>Chain: OKC (ID 66)</li>
                 <li>Function URL: <a href="https://okxchainai-ut5ux7ubpq-uc.a.run.app" target="_blank">Cloud Run (Functions)</a></li>
                 <li>Repo Modules: Express API, Firebase Admin, OpenAI, Telegram Bot</li>
+                <li><span data-i18n="stat_ca">合约地址</span>：<code id="contract-address">0xA9c9b9479dD0661f533D16a7965203A9d8c99097</code> <button id="copy-ca" class="btn sm" data-i18n="copy">复制</button> <a href="https://www.oklink.com/okc/address/0xA9c9b9479dD0661f533D16a7965203A9d8c99097" target="_blank">OKLink</a></li>
               </ul>
             </div>
             <div>
@@ -98,6 +110,7 @@
               <ul>
                 <li><a href="/api.html" target="_blank">API 文档</a></li>
                 <li><a href="/index.html">Web App</a></li>
+                <li><a href="https://x.com/xaiai_bot?s=21" target="_blank">Twitter / X</a></li>
               </ul>
             </div>
           </div>
@@ -110,6 +123,53 @@
             <li data-i18n="v_2">在合规安全的前提下，提供一站式工具链与自动化工作流。</li>
             <li data-i18n="v_3">通过机器人与 API，连接生态伙伴与开发者。</li>
           </ul>
+        </section>
+
+        <section id="pricing">
+          <h2 data-i18n="t_pricing">定价与套餐</h2>
+          <ul>
+            <li data-i18n="pr_1">免费层：基础查询与有限次数的 AI 对话，适合个人体验。</li>
+            <li data-i18n="pr_2">专业层：更高配额、队列优先与高级端点访问，适合重度用户与交易者。</li>
+            <li data-i18n="pr_3">企业层：专属限流池、SLA、私有部署选项与定制集成。</li>
+          </ul>
+        </section>
+
+        <section id="privacy">
+          <h2 data-i18n="t_privacy">数据与隐私</h2>
+          <ul>
+            <li data-i18n="pv_1">仅在必要时存储最小化数据（如请求计数、错误日志），不保存敏感私钥。</li>
+            <li data-i18n="pv_2">遵循“可删除”原则：用户可按需删除其会话与监控任务。</li>
+            <li data-i18n="pv_3">对外调用第三方服务（如 LLM、RPC）时，会进行最小字段透传与脱敏。</li>
+          </ul>
+        </section>
+
+        <section id="security">
+          <h2 data-i18n="t_security">安全设计</h2>
+          <ul>
+            <li data-i18n="se_1">多层鉴权：API Key、可选 OAuth、Telegram 用户绑定。</li>
+            <li data-i18n="se_2">细粒度限流与隔离：按 Key、IP 与端点做配额与桶隔离。</li>
+            <li data-i18n="se_3">提示词与输出审计：高风险操作需显式确认与模板化执行。</li>
+            <li data-i18n="se_4">可观测性：结构化日志、请求追踪与异常告警。</li>
+          </ul>
+        </section>
+
+        <section id="community">
+          <h2 data-i18n="t_community">社区与贡献</h2>
+          <p data-i18n="cm_1">欢迎通过 Issue/PR 贡献能力插件、数据适配器与语言包；也可参与提示词与样例库建设。</p>
+          <ul>
+            <li data-i18n="cm_2">社交媒体：<a href="https://x.com/xaiai_bot?s=21" target="_blank">Twitter / X</a></li>
+            <li data-i18n="cm_3">机器人：Telegram 命令 /start /help /tweet 等</li>
+          </ul>
+        </section>
+
+        <section id="faq">
+          <h2 data-i18n="t_faq">常见问题（FAQ）</h2>
+          <h3 data-i18n="fq_q1">如何集成到我自己的机器人？</h3>
+          <p data-i18n="fq_a1">参考 API 文档与示例，使用 `/api/*` 端点对接；生产建议配置 Webhook 并启用鉴权与限流。</p>
+          <h3 data-i18n="fq_q2">是否支持多链？</h3>
+          <p data-i18n="fq_a2">当前以 OKC 为主，计划逐步接入更多 EVM 兼容链，并通过适配层扩展数据源。</p>
+          <h3 data-i18n="fq_q3">我的数据会用于模型训练吗？</h3>
+          <p data-i18n="fq_a3">默认不会。仅在用户授权的前提下，匿名化聚合数据可用于质量改进与指标统计。</p>
         </section>
 
         <section id="overview">
@@ -181,29 +241,46 @@ Body: { "contractAddress": "0x..." }
 
   <footer>
     © <span id="year"></span> OKX Chain AI Assistant · All rights reserved.
+    <span class="social">
+      <a href="https://x.com/xaiai_bot?s=21" target="_blank" aria-label="X (Twitter)">
+        <svg width="14" height="14" viewBox="0 0 1200 1227" fill="currentColor" aria-hidden="true">
+          <path d="M714.163 519.284L1160.89 0H1057.28L667.137 450.887L354.917 0H0L468.492 672.217L0 1226.37H103.614L515.594 748.609L845.083 1226.37H1200L714.137 519.284H714.163ZM569.217 686.087L521.091 617.826L141.005 79.6941H304.021L611.412 516.903L659.538 585.164L1057.33 1150.3H894.313L569.217 686.113V686.087Z"/>
+        </svg>
+      </a>
+    </span>
   </footer>
 
   <script>
     const i18n = {
       zh: {
-        toc: '目录', i_intro:'1. 项目简介', i_vision:'2. 愿景与目标', i_overview:'3. 核心能力', i_arch:'4. 系统架构', i_api:'5. API 与安全', i_tg:'6. Telegram 集成', i_roadmap:'7. 路线图', i_legal:'8. 法律与合规',
+        toc: '目录', i_follow:'关注 X / Twitter', i_intro:'1. 项目简介', i_vision:'2. 愿景与目标', i_overview:'3. 核心能力', i_arch:'4. 系统架构', i_api:'5. API 与安全', i_tg:'6. Telegram 集成', i_pricing:'7. 定价与套餐', i_privacy:'8. 数据与隐私', i_security:'9. 安全设计', i_community:'10. 社区与贡献', i_faq:'11. 常见问题', i_roadmap:'12. 路线图', i_legal:'13. 法律与合规',
         t_intro:'OKX 链 AI 助手 · 白皮书', p_intro:'本项目是面向 OKX Chain 的智能链上助手，聚合链上数据、AI 推理与消息机器人能力，帮助用户完成代币分析、合约生成、钱包监控与多语言交互。',
-        t_stats:'当前公开信息', t_links:'链接', t_vision:'愿景与目标', v_1:'用 AI 降低链上分析门槛，让普通用户也能读懂复杂数据。', v_2:'在合规安全的前提下，提供一站式工具链与自动化工作流。', v_3:'通过机器人与 API，连接生态伙伴与开发者。',
+        t_stats:'当前公开信息', t_links:'链接', stat_ca:'合约地址', copy:'复制', t_vision:'愿景与目标', v_1:'用 AI 降低链上分析门槛，让普通用户也能读懂复杂数据。', v_2:'在合规安全的前提下，提供一站式工具链与自动化工作流。', v_3:'通过机器人与 API，连接生态伙伴与开发者。',
         t_overview:'核心能力', c_1:'代币分析：输入合约地址，自动抓取链上信息并生成 AI 叙事。', c_2:'智能合约与 NFT：根据自然语言生成代码/元数据。', c_3:'钱包监控：买入事件识别与 Telegram 推送。', c_4:'多语言：中英双语，接口层可扩展更多语言。',
         t_arch:'系统架构', a_1:'系统采用前后端分离 + Firebase Functions 的无服务器架构，集成 OKX RPC、OpenAI、Telegram Bot 与 Realtime Database。',
         t_api:'API 与安全', api_1:'鉴权：自定义 API Key（x-api-key 或 Authorization: Bearer）。', api_2:'限流：按套餐（月配额）统计与限制。', api_3:'端点：/api/chat、/api/token/analyze、/api/chain/analyze、/api/wallet/:addr 等。',
         t_tg:'Telegram 集成', tg_1:'机器人同时支持轮询与 Webhook 两种形态。生产推荐使用 Webhook，降低网络不确定性。', tg_2:'命令：/start /help /analyze /wallet /monitor /tweet 等', tg_3:'多语言菜单、Markdown 清洗、长消息分片发送',
+        t_pricing:'定价与套餐', pr_1:'免费层：基础查询与有限次数的 AI 对话，适合个人体验。', pr_2:'专业层：更高配额、队列优先与高级端点访问，适合重度用户与交易者。', pr_3:'企业层：专属限流池、SLA、私有部署选项与定制集成。',
+        t_privacy:'数据与隐私', pv_1:'仅在必要时存储最小化数据（如请求计数、错误日志），不保存敏感私钥。', pv_2:'遵循“可删除”原则：用户可按需删除其会话与监控任务。', pv_3:'对外调用第三方服务（如 LLM、RPC）时，会进行最小字段透传与脱敏。',
+        t_security:'安全设计', se_1:'多层鉴权：API Key、可选 OAuth、Telegram 用户绑定。', se_2:'细粒度限流与隔离：按 Key、IP 与端点做配额与桶隔离。', se_3:'提示词与输出审计：高风险操作需显式确认与模板化执行。', se_4:'可观测性：结构化日志、请求追踪与异常告警。',
+        t_community:'社区与贡献', cm_1:'欢迎通过 Issue/PR 贡献能力插件、数据适配器与语言包；也可参与提示词与样例库建设。', cm_2:'社交媒体：Twitter / X', cm_3:'机器人：Telegram 命令 /start /help /tweet 等',
+        t_faq:'常见问题（FAQ）', fq_q1:'如何集成到我自己的机器人？', fq_a1:'参考 API 文档与示例，使用 /api/* 端点对接；生产建议配置 Webhook 并启用鉴权与限流。', fq_q2:'是否支持多链？', fq_a2:'当前以 OKC 为主，计划逐步接入更多 EVM 兼容链，并通过适配层扩展数据源。', fq_q3:'我的数据会用于模型训练吗？', fq_a3:'默认不会。仅在用户授权的前提下，匿名化聚合数据可用于质量改进与指标统计。',
         t_roadmap:'路线图', r_1:'Q3：完善多语言与钱包监控能力；发布开发者 API Key 管理', r_2:'Q4：策略回测与提示词市场；更多链支持与可插拔数据源', r_3:'Q1：开放插件接口，支持自定义 AI Agent 与工作流',
         t_legal:'法律与合规', l_1:'本项目不提供投资建议。请遵守当地法律法规，合理使用工具与接口。'
       },
       en: {
-        toc: 'Contents', i_intro:'1. Introduction', i_vision:'2. Vision & Goals', i_overview:'3. Capabilities', i_arch:'4. Architecture', i_api:'5. APIs & Security', i_tg:'6. Telegram Integration', i_roadmap:'7. Roadmap', i_legal:'8. Legal',
+        toc: 'Contents', i_follow:'Follow on X / Twitter', i_intro:'1. Introduction', i_vision:'2. Vision & Goals', i_overview:'3. Capabilities', i_arch:'4. Architecture', i_api:'5. APIs & Security', i_tg:'6. Telegram Integration', i_pricing:'7. Pricing', i_privacy:'8. Privacy & Data', i_security:'9. Security', i_community:'10. Community', i_faq:'11. FAQ', i_roadmap:'12. Roadmap', i_legal:'13. Legal',
         t_intro:'OKX Chain AI Assistant · Whitepaper', p_intro:'An on-chain AI assistant for OKX Chain, combining on-chain data, AI reasoning and bot interfaces for token analysis, contract/NFT generation, wallet monitoring and multilingual UX.',
-        t_stats:'Public Facts', t_links:'Links', t_vision:'Vision & Goals', v_1:'Democratize on-chain analysis with AI.', v_2:'Provide a secure, compliant toolchain and automation.', v_3:'Connect ecosystem partners and developers via bot and APIs.',
+        t_stats:'Public Facts', t_links:'Links', stat_ca:'Contract Address', copy:'Copy', t_vision:'Vision & Goals', v_1:'Democratize on-chain analysis with AI.', v_2:'Provide a secure, compliant toolchain and automation.', v_3:'Connect ecosystem partners and developers via bot and APIs.',
         t_overview:'Capabilities', c_1:'Token analysis: AI narrative from a contract address.', c_2:'Smart contracts & NFTs: generate from natural language.', c_3:'Wallet monitor: buy detection and Telegram push.', c_4:'Multilingual: Chinese/English, extensible to more.',
         t_arch:'Architecture', a_1:'Serverless architecture on Firebase Functions + Express, integrating OKX RPC, OpenAI, Telegram Bot and Realtime Database.',
         t_api:'APIs & Security', api_1:'Auth: custom API Key (x-api-key or Authorization: Bearer).', api_2:'Rate limiting by subscription quota.', api_3:'Endpoints: /api/chat, /api/token/analyze, /api/chain/analyze, /api/wallet/:addr, etc.',
         t_tg:'Telegram Integration', tg_1:'Supports both polling and webhook. Webhook is recommended in production.', tg_2:'Commands: /start /help /analyze /wallet /monitor /tweet', tg_3:'Multilingual menu, Markdown sanitization, long message chunking.',
+        t_pricing:'Pricing', pr_1:'Free: basic queries and limited AI chats.', pr_2:'Pro: higher quota, priority queue, advanced endpoints.', pr_3:'Enterprise: dedicated rate limits, SLA, private deployment and custom integrations.',
+        t_privacy:'Privacy & Data', pv_1:'Store minimal data only when necessary (counters, error logs); no private keys.', pv_2:'Deletability: users can delete sessions and monitors on demand.', pv_3:'When calling third-party services (LLM, RPC), minimize fields and anonymize.',
+        t_security:'Security', se_1:'Multi-layer auth: API keys, optional OAuth, Telegram binding.', se_2:'Fine-grained rate limiting and isolation by key, IP and endpoint.', se_3:'Prompt/output guardrails: explicit confirmation for risky ops and templated execution.', se_4:'Observability: structured logs, tracing and alerting.',
+        t_community:'Community & Contribution', cm_1:'Contribute plugins, data adapters and language packs via issues/PRs; help build prompts and examples.', cm_2:'Social: Twitter / X', cm_3:'Bots: Telegram commands /start /help /tweet',
+        t_faq:'FAQ', fq_q1:'How do I integrate with my own bot?', fq_a1:'Use the /api/* endpoints and examples; in production, set up webhook, auth and rate limiting.', fq_q2:'Do you support multiple chains?', fq_a2:'OKC first; more EVM chains planned via adapter layer.', fq_q3:'Is my data used for model training?', fq_a3:'Not by default. With consent, anonymized aggregates may improve quality and metrics.',
         t_roadmap:'Roadmap', r_1:'Q3: Multilingual & wallet monitor enhancements; API key console', r_2:'Q4: Strategy backtesting, prompt marketplace; multi-chain & pluggable data sources', r_3:'Q1: Plugin interface for custom AI agents & workflows',
         t_legal:'Legal & Compliance', l_1:'No investment advice. Use responsibly and comply with local laws.'
       }
@@ -222,6 +299,20 @@ Body: { "contractAddress": "0x..." }
     $('#btn-en').addEventListener('click', ()=>applyLang('en'));
     applyLang('zh');
     $('#year').innerText = new Date().getFullYear();
+    const copyButton = document.getElementById('copy-ca');
+    if (copyButton) {
+      copyButton.addEventListener('click', async () => {
+        const ca = document.getElementById('contract-address')?.innerText?.trim();
+        try {
+          if (ca) await navigator.clipboard.writeText(ca);
+          const old = copyButton.innerText;
+          copyButton.innerText = document.documentElement.lang === 'zh' ? '已复制' : 'Copied';
+          setTimeout(()=>{ copyButton.innerText = old; }, 1200);
+        } catch (e) {
+          console.error('copy failed', e);
+        }
+      });
+    }
   </script>
 </body>
 </html>
