@@ -6,6 +6,7 @@
     <title>AI文明模拟器 - 文明的兴衰</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='black'/%3E%3Ctext x='8' y='42' font-size='32' fill='%2322c55e' font-family='monospace'%3EAI%3C/text%3E%3C/svg%3E"/>
     <!-- Firebase SDK (compat) for realtime sync -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -79,9 +80,7 @@
             .pip { position:absolute; left:10px; top:40px; width:220px; height:140px; background: rgba(0,0,0,0.55); border:1px solid rgba(34,197,94,0.4); box-shadow: 0 0 18px rgba(0,0,0,0.5); }
             .pip pre { font-size: 8px; line-height: 10px; padding:6px; color:#34d399; }
             .channel-title { position:absolute; top:8px; left:50%; transform:translateX(-50%); background: rgba(0,0,0,0.45); border:1px solid rgba(34,197,94,0.4); padding:3px 8px; font-size:12px; letter-spacing:1px; }
-            @keyframes danmaku { from{ transform: translateX(110%);} to{ transform: translateX(-120%);} }
-            .danmaku-layer { pointer-events:none; position:absolute; left:0; right:0; top:25%; height:50%; overflow:visible; }
-            .danmaku-item { position:absolute; white-space:nowrap; color:#34d399; text-shadow: 0 0 6px rgba(52,211,153,0.6); animation: danmaku 12s linear forwards; }
+            /* 弹幕关闭 */
         }
     </style>
 </head>
@@ -228,7 +227,7 @@
                     <div class="absolute inset-0 scanlines"></div>
                     <div class="absolute inset-0 vignette"></div>
                     <div class="pip"><pre id="pip-canvas"></pre></div>
-                    <div id="danmaku" class="danmaku-layer"></div>
+                    <!-- 弹幕已关闭 -->
                 </div>
                 
                 <!-- 加载覆盖层 -->
@@ -318,7 +317,7 @@
     </main>
 
     <!-- 关于模态框已禁用 -->
-    
+
     <script>
         // 文明模拟器核心逻辑
         document.addEventListener('DOMContentLoaded', () => {
@@ -329,10 +328,10 @@
             const speedText = document.getElementById('speed-text');
             const resetBtn = document.getElementById('reset-btn');
             const mobileResetBtn = document.getElementById('mobile-reset-btn');
-            const aboutBtn = document.getElementById('about-btn');
-            const mobileAboutBtn = document.getElementById('mobile-about-btn');
-            const closeAboutBtn = document.getElementById('close-about');
-            const startFromAboutBtn = document.getElementById('start-from-about');
+            const aboutBtn = null;
+            const mobileAboutBtn = null;
+            const closeAboutBtn = null;
+            const startFromAboutBtn = null;
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
             const simulationTimeEl = document.getElementById('simulation-time');
@@ -347,7 +346,7 @@
             const lifespanProgress = document.getElementById('lifespan-progress');
             const lifespanPercentage = document.getElementById('lifespan-percentage');
             const lifeStageEl = document.getElementById('life-stage');
-            const aboutModal = document.getElementById('about-modal');
+            const aboutModal = null;
             // 将可视层包裹以产生镜头漂移
             try {
                 const area = document.getElementById('simulation-area');
@@ -1265,21 +1264,7 @@
             }
 
             // 简易弹幕：从事件流随机挑选并播发
-            setInterval(()=>{
-                try {
-                    const layer = document.getElementById('danmaku');
-                    if (!layer) return;
-                    const evs = (civilization.events||[]);
-                    const msg = evs.length ? evs[Math.floor(Math.random()*evs.length)].message : '欢迎来到 AI 直播间';
-                    const span = document.createElement('span');
-                    span.className = 'danmaku-item';
-                    span.style.top = `${25 + Math.random()*50}%`;
-                    span.style.fontSize = `${12 + Math.random()*4}px`;
-                    span.textContent = msg;
-                    layer.appendChild(span);
-                    setTimeout(()=>{ try{ layer.removeChild(span);}catch{} }, 12000);
-                } catch {}
-            }, 3500);
+            // 弹幕计时器已关闭
 
             function updateAIMood(score) {
                 const face = score > 70 ? ':)' : score < 30 ? ':(' : ':|';
@@ -1355,7 +1340,7 @@
                     
                     // 改变进度条颜色
                     if (civilizationStageEl) {
-                        civilizationStageEl.style.backgroundColor = civilizationStages[newStage].color;
+                    civilizationStageEl.style.backgroundColor = civilizationStages[newStage].color;
                     }
                 }
                 
@@ -1714,18 +1699,10 @@
             }
             
             // 显示关于模态框
-            function showAboutModal() {
-                aboutModal.classList.remove('hidden');
-                // 添加动画效果
-                const modalContent = aboutModal.querySelector('div');
-                modalContent.classList.add('scale-100');
-                modalContent.classList.remove('scale-95', 'opacity-0');
-            }
+            function showAboutModal() {}
             
             // 隐藏关于模态框
-            function hideAboutModal() {
-                aboutModal.classList.add('hidden');
-            }
+            function hideAboutModal() {}
             
             // 切换移动菜单
             function toggleMobileMenu() {
@@ -1761,7 +1738,7 @@
                     });
                 }
             } catch {}
-
+            
             // 事件监听器
             startBtn.addEventListener('click', startSimulation);
             pauseBtn.addEventListener('click', pauseSimulation);
@@ -1800,24 +1777,11 @@
                 pauseSimulation();
                 initialize();
             });
-            aboutBtn.addEventListener('click', showAboutModal);
-            mobileAboutBtn.addEventListener('click', () => {
-                toggleMobileMenu();
-                showAboutModal();
-            });
-            closeAboutBtn.addEventListener('click', hideAboutModal);
-            startFromAboutBtn.addEventListener('click', () => {
-                hideAboutModal();
-                startSimulation();
-            });
+            // 关于按钮已禁用
             mobileMenuBtn.addEventListener('click', toggleMobileMenu);
             
             // 点击模态框外部关闭
-            aboutModal.addEventListener('click', (e) => {
-                if (e.target === aboutModal) {
-                    hideAboutModal();
-                }
-            });
+            // 关于模态框已移除
             
             // 存档/读档
             function getUserId(){
