@@ -1,320 +1,1827 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>OKX Chain AI Assistant — Whitepaper | 白皮书</title>
-  <meta name="description" content="OKX Chain AI Assistant whitepaper: vision, architecture, APIs, Telegram integration, and roadmap.">
-  <link rel="icon" href="/1.png">
-  <style>
-    :root { --bg:#0b1020; --card:#0f1530; --text:#eaf1ff; --muted:#a8b3cf; --brand:#4cafef; --accent:#7ce0a3; --border:#1f2a4a; }
-    * { box-sizing: border-box; }
-    html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font:16px/1.7 system-ui, -apple-system, Segoe UI, Roboto, PingFang SC, Helvetica, Arial, "Microsoft YaHei", sans-serif; }
-    a { color: var(--brand); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    header { position: sticky; top:0; z-index: 10; backdrop-filter: blur(8px); background: rgba(11,16,32,0.75); border-bottom:1px solid var(--border); }
-    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
-    .nav { display:flex; align-items:center; justify-content:space-between; height:64px; }
-    .brand { display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing: .3px; }
-    .brand img { width:28px; height:28px; border-radius:6px; }
-    .actions { display:flex; align-items:center; gap:10px; }
-    .btn { padding:8px 12px; border:1px solid var(--border); border-radius:10px; color:var(--text); background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)); cursor:pointer; }
-    .btn.primary { border-color: #2d5fff; background:#1a2960; }
-    .btn.sm { padding:4px 8px; font-size:12px; border-radius:8px; }
-    main { display:grid; grid-template-columns: 260px 1fr; gap:24px; }
-    aside { position:sticky; top:84px; align-self:start; padding:16px; border:1px solid var(--border); border-radius:12px; background:var(--card); max-height: calc(100vh - 120px); overflow:auto; }
-    aside h4 { margin:6px 0 10px; color:var(--muted); font-weight:600; font-size:13px; letter-spacing:.4px; }
-    .toc a { display:block; padding:6px 8px; border-radius:8px; color:var(--muted); }
-    .toc a:hover { background:#111937; color:var(--text); }
-    section { padding:18px; border:1px solid var(--border); background:var(--card); border-radius:14px; margin-bottom:18px; }
-    h1 { font-size:28px; margin:16px 0 10px; }
-    h2 { font-size:22px; margin:12px 0; }
-    h3 { font-size:18px; margin:10px 0; color:var(--muted); }
-    p { margin:10px 0; color:#d7e1ff; }
-    ul { margin:8px 0 8px 20px; }
-    code, pre { background:#0a1230; border:1px solid var(--border); border-radius:10px; }
-    code { padding:2px 6px; }
-    pre { padding:12px; overflow:auto; }
-    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    .badge { display:inline-block; padding:3px 8px; border-radius:999px; font-size:12px; background:#12204a; border:1px solid var(--border); color:#cfe2ff; }
-    footer { text-align:center; color:var(--muted); padding:26px 0 50px; }
-    footer .social { display:inline-flex; gap:10px; align-items:center; margin-left:8px; }
-    footer .social a { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border:1px solid var(--border); border-radius:6px; background:#0d1430; color:#cfe2ff; }
-    footer .social a:hover { background:#111937; }
-    .lang-switch { border:1px solid var(--border); border-radius:10px; overflow:hidden; }
-    .lang-switch button { background:none; border:none; color:var(--muted); padding:8px 10px; cursor:pointer; }
-    .lang-switch button.active { color:var(--text); background:#111937; }
-    @media (max-width: 960px) { main { grid-template-columns: 1fr; } aside { position:static; order:2; } }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="wrap nav">
-      <div class="brand">
-        <img src="/1.png" alt="logo">
-        <span>OKX Chain AI Assistant</span>
-        <span class="badge" id="edition-badge">Whitepaper</span>
-      </div>
-      <div class="actions">
-        <div class="lang-switch" role="tablist" aria-label="Language switcher">
-          <button id="btn-zh" class="active" data-lang="zh" aria-selected="true">中文</button>
-          <button id="btn-en" data-lang="en" aria-selected="false">English</button>
-        </div>
-        <a class="btn" href="https://x.com/xaiai_bot?s=21" target="_blank" aria-label="X (Twitter)">X / Twitter</a>
-        <a class="btn" href="/api.html" target="_blank">API</a>
-        <a class="btn primary" href="/index.html">Launch App</a>
-      </div>
-    </div>
-  </header>
-
-  <div class="wrap" style="padding:24px 20px 0;">
-    <main>
-      <aside>
-        <h4 data-i18n="toc">目录</h4>
-        <nav class="toc">
-          <a href="https://x.com/xaiai_bot?s=21" target="_blank" data-i18n="i_follow">关注 X / Twitter</a>
-          <a href="#intro" data-i18n="i_intro">1. 项目简介</a>
-          <a href="#vision" data-i18n="i_vision">2. 愿景与目标</a>
-          <a href="#overview" data-i18n="i_overview">3. 核心能力</a>
-          <a href="#arch" data-i18n="i_arch">4. 系统架构</a>
-          <a href="#api" data-i18n="i_api">5. API 与安全</a>
-          <a href="#telegram" data-i18n="i_tg">6. Telegram 集成</a>
-          <a href="#pricing" data-i18n="i_pricing">7. 定价与套餐</a>
-          <a href="#privacy" data-i18n="i_privacy">8. 数据与隐私</a>
-          <a href="#security" data-i18n="i_security">9. 安全设计</a>
-          <a href="#community" data-i18n="i_community">10. 社区与贡献</a>
-          <a href="#faq" data-i18n="i_faq">11. 常见问题</a>
-          <a href="#roadmap" data-i18n="i_roadmap">12. 路线图</a>
-          <a href="#legal" data-i18n="i_legal">13. 法律与合规</a>
-        </nav>
-      </aside>
-
-      <div id="content">
-        <section id="intro">
-          <h1 data-i18n="t_intro">OKX 链 AI 助手 · 白皮书</h1>
-          <p data-i18n="p_intro">
-            本项目是面向 OKX Chain 的智能链上助手，聚合链上数据、AI 推理与消息机器人能力，帮助用户完成代币分析、合约生成、钱包监控与多语言交互。
-          </p>
-          <div class="grid-2">
-            <div>
-              <h3 data-i18n="t_stats">当前公开信息</h3>
-              <ul>
-                <li>Chain: OKC (ID 66)</li>
-                <li>Function URL: <a href="https://okxchainai-ut5ux7ubpq-uc.a.run.app" target="_blank">Cloud Run (Functions)</a></li>
-                <li>Repo Modules: Express API, Firebase Admin, OpenAI, Telegram Bot</li>
-                <li><span data-i18n="stat_ca">合约地址</span>：<code id="contract-address">0xA9c9b9479dD0661f533D16a7965203A9d8c99097</code> <button id="copy-ca" class="btn sm" data-i18n="copy">复制</button> <a href="https://www.oklink.com/okc/address/0xA9c9b9479dD0661f533D16a7965203A9d8c99097" target="_blank">OKLink</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 data-i18n="t_links">链接</h3>
-              <ul>
-                <li><a href="/api.html" target="_blank">API 文档</a></li>
-                <li><a href="/index.html">Web App</a></li>
-                <li><a href="https://x.com/xaiai_bot?s=21" target="_blank">Twitter / X</a></li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section id="vision">
-          <h2 data-i18n="t_vision">愿景与目标</h2>
-          <ul>
-            <li data-i18n="v_1">用 AI 降低链上分析门槛，让普通用户也能读懂复杂数据。</li>
-            <li data-i18n="v_2">在合规安全的前提下，提供一站式工具链与自动化工作流。</li>
-            <li data-i18n="v_3">通过机器人与 API，连接生态伙伴与开发者。</li>
-          </ul>
-        </section>
-
-        <section id="pricing">
-          <h2 data-i18n="t_pricing">定价与套餐</h2>
-          <ul>
-            <li data-i18n="pr_1">免费层：基础查询与有限次数的 AI 对话，适合个人体验。</li>
-            <li data-i18n="pr_2">专业层：更高配额、队列优先与高级端点访问，适合重度用户与交易者。</li>
-            <li data-i18n="pr_3">企业层：专属限流池、SLA、私有部署选项与定制集成。</li>
-          </ul>
-        </section>
-
-        <section id="privacy">
-          <h2 data-i18n="t_privacy">数据与隐私</h2>
-          <ul>
-            <li data-i18n="pv_1">仅在必要时存储最小化数据（如请求计数、错误日志），不保存敏感私钥。</li>
-            <li data-i18n="pv_2">遵循“可删除”原则：用户可按需删除其会话与监控任务。</li>
-            <li data-i18n="pv_3">对外调用第三方服务（如 LLM、RPC）时，会进行最小字段透传与脱敏。</li>
-          </ul>
-        </section>
-
-        <section id="security">
-          <h2 data-i18n="t_security">安全设计</h2>
-          <ul>
-            <li data-i18n="se_1">多层鉴权：API Key、可选 OAuth、Telegram 用户绑定。</li>
-            <li data-i18n="se_2">细粒度限流与隔离：按 Key、IP 与端点做配额与桶隔离。</li>
-            <li data-i18n="se_3">提示词与输出审计：高风险操作需显式确认与模板化执行。</li>
-            <li data-i18n="se_4">可观测性：结构化日志、请求追踪与异常告警。</li>
-          </ul>
-        </section>
-
-        <section id="community">
-          <h2 data-i18n="t_community">社区与贡献</h2>
-          <p data-i18n="cm_1">欢迎通过 Issue/PR 贡献能力插件、数据适配器与语言包；也可参与提示词与样例库建设。</p>
-          <ul>
-            <li data-i18n="cm_2">社交媒体：<a href="https://x.com/xaiai_bot?s=21" target="_blank">Twitter / X</a></li>
-            <li data-i18n="cm_3">机器人：Telegram 命令 /start /help /tweet 等</li>
-          </ul>
-        </section>
-
-        <section id="faq">
-          <h2 data-i18n="t_faq">常见问题（FAQ）</h2>
-          <h3 data-i18n="fq_q1">如何集成到我自己的机器人？</h3>
-          <p data-i18n="fq_a1">参考 API 文档与示例，使用 `/api/*` 端点对接；生产建议配置 Webhook 并启用鉴权与限流。</p>
-          <h3 data-i18n="fq_q2">是否支持多链？</h3>
-          <p data-i18n="fq_a2">当前以 OKC 为主，计划逐步接入更多 EVM 兼容链，并通过适配层扩展数据源。</p>
-          <h3 data-i18n="fq_q3">我的数据会用于模型训练吗？</h3>
-          <p data-i18n="fq_a3">默认不会。仅在用户授权的前提下，匿名化聚合数据可用于质量改进与指标统计。</p>
-        </section>
-
-        <section id="overview">
-          <h2 data-i18n="t_overview">核心能力</h2>
-          <ul>
-            <li data-i18n="c_1">代币分析：输入合约地址，自动抓取链上信息并生成 AI 叙事。</li>
-            <li data-i18n="c_2">智能合约与 NFT：根据自然语言生成代码/元数据。</li>
-            <li data-i18n="c_3">钱包监控：买入事件识别与 Telegram 推送。</li>
-            <li data-i18n="c_4">多语言：中英双语，接口层可扩展更多语言。</li>
-          </ul>
-        </section>
-
-        <section id="arch">
-          <h2 data-i18n="t_arch">系统架构</h2>
-          <p data-i18n="a_1">系统采用前后端分离 + Firebase Functions 的无服务器架构，集成 OKX RPC、OpenAI、Telegram Bot 与 Realtime Database。</p>
-          <pre><code>Clients (Web / Telegram)
-   │
-   ├── HTTPS → Firebase Functions (Express)
-   │     ├── Auth & Rate Limit
-   │     ├── OpenAI Service (chat, generate)
-   │     ├── OKX RPC Service (chain stats, token info)
-   │     ├── Wallet/Tweet Monitor Services
-   │     └── Telegram Integration (Polling/Webhook)
-   │
-   └── Firebase (Firestore/RTDB) for storage & realtime
-          </code></pre>
-          <p><span class="badge">Security</span> <span class="badge">Observability</span> <span class="badge">Scalability</span></p>
-        </section>
-
-        <section id="api">
-          <h2 data-i18n="t_api">API 与安全</h2>
-          <ul>
-            <li data-i18n="api_1">鉴权：自定义 API Key（`x-api-key` 或 `Authorization: Bearer`）。</li>
-            <li data-i18n="api_2">限流：按套餐（月配额）统计与限制。</li>
-            <li data-i18n="api_3">端点：`/api/chat`、`/api/token/analyze`、`/api/chain/analyze`、`/api/wallet/:addr` 等。</li>
-          </ul>
-          <pre><code>POST /api/token/analyze
-Headers: { "x-api-key": "<your_key>" }
-Body: { "contractAddress": "0x..." }
-→ 200 { success: true, data: { tokenData, chainData, narrative } }
-          </code></pre>
-        </section>
-
-        <section id="telegram">
-          <h2 data-i18n="t_tg">Telegram 集成</h2>
-          <p data-i18n="tg_1">机器人同时支持轮询与 Webhook 两种形态。生产推荐使用 Webhook，降低网络不确定性。</p>
-          <ul>
-            <li data-i18n="tg_2">命令：/start /help /analyze /wallet /monitor /tweet 等</li>
-            <li data-i18n="tg_3">多语言菜单、Markdown 清洗、长消息分片发送</li>
-          </ul>
-        </section>
-
-        <section id="roadmap">
-          <h2 data-i18n="t_roadmap">路线图</h2>
-          <ul>
-            <li data-i18n="r_1">Q3：完善多语言与钱包监控能力；发布开发者 API Key 管理</li>
-            <li data-i18n="r_2">Q4：策略回测与提示词市场；更多链支持与可插拔数据源</li>
-            <li data-i18n="r_3">Q1：开放插件接口，支持自定义 AI Agent 与工作流</li>
-          </ul>
-        </section>
-
-        <section id="legal">
-          <h2 data-i18n="t_legal">法律与合规</h2>
-          <p data-i18n="l_1">本项目不提供投资建议。请遵守当地法律法规，合理使用工具与接口。</p>
-        </section>
-      </div>
-    </main>
-  </div>
-
-  <footer>
-    © <span id="year"></span> OKX Chain AI Assistant · All rights reserved.
-    <span class="social">
-      <a href="https://x.com/xaiai_bot?s=21" target="_blank" aria-label="X (Twitter)">
-        <svg width="14" height="14" viewBox="0 0 1200 1227" fill="currentColor" aria-hidden="true">
-          <path d="M714.163 519.284L1160.89 0H1057.28L667.137 450.887L354.917 0H0L468.492 672.217L0 1226.37H103.614L515.594 748.609L845.083 1226.37H1200L714.137 519.284H714.163ZM569.217 686.087L521.091 617.826L141.005 79.6941H304.021L611.412 516.903L659.538 585.164L1057.33 1150.3H894.313L569.217 686.113V686.087Z"/>
-        </svg>
-      </a>
-    </span>
-  </footer>
-
-  <script>
-    const i18n = {
-      zh: {
-        toc: '目录', i_follow:'关注 X / Twitter', i_intro:'1. 项目简介', i_vision:'2. 愿景与目标', i_overview:'3. 核心能力', i_arch:'4. 系统架构', i_api:'5. API 与安全', i_tg:'6. Telegram 集成', i_pricing:'7. 定价与套餐', i_privacy:'8. 数据与隐私', i_security:'9. 安全设计', i_community:'10. 社区与贡献', i_faq:'11. 常见问题', i_roadmap:'12. 路线图', i_legal:'13. 法律与合规',
-        t_intro:'OKX 链 AI 助手 · 白皮书', p_intro:'本项目是面向 OKX Chain 的智能链上助手，聚合链上数据、AI 推理与消息机器人能力，帮助用户完成代币分析、合约生成、钱包监控与多语言交互。',
-        t_stats:'当前公开信息', t_links:'链接', stat_ca:'合约地址', copy:'复制', t_vision:'愿景与目标', v_1:'用 AI 降低链上分析门槛，让普通用户也能读懂复杂数据。', v_2:'在合规安全的前提下，提供一站式工具链与自动化工作流。', v_3:'通过机器人与 API，连接生态伙伴与开发者。',
-        t_overview:'核心能力', c_1:'代币分析：输入合约地址，自动抓取链上信息并生成 AI 叙事。', c_2:'智能合约与 NFT：根据自然语言生成代码/元数据。', c_3:'钱包监控：买入事件识别与 Telegram 推送。', c_4:'多语言：中英双语，接口层可扩展更多语言。',
-        t_arch:'系统架构', a_1:'系统采用前后端分离 + Firebase Functions 的无服务器架构，集成 OKX RPC、OpenAI、Telegram Bot 与 Realtime Database。',
-        t_api:'API 与安全', api_1:'鉴权：自定义 API Key（x-api-key 或 Authorization: Bearer）。', api_2:'限流：按套餐（月配额）统计与限制。', api_3:'端点：/api/chat、/api/token/analyze、/api/chain/analyze、/api/wallet/:addr 等。',
-        t_tg:'Telegram 集成', tg_1:'机器人同时支持轮询与 Webhook 两种形态。生产推荐使用 Webhook，降低网络不确定性。', tg_2:'命令：/start /help /analyze /wallet /monitor /tweet 等', tg_3:'多语言菜单、Markdown 清洗、长消息分片发送',
-        t_pricing:'定价与套餐', pr_1:'免费层：基础查询与有限次数的 AI 对话，适合个人体验。', pr_2:'专业层：更高配额、队列优先与高级端点访问，适合重度用户与交易者。', pr_3:'企业层：专属限流池、SLA、私有部署选项与定制集成。',
-        t_privacy:'数据与隐私', pv_1:'仅在必要时存储最小化数据（如请求计数、错误日志），不保存敏感私钥。', pv_2:'遵循“可删除”原则：用户可按需删除其会话与监控任务。', pv_3:'对外调用第三方服务（如 LLM、RPC）时，会进行最小字段透传与脱敏。',
-        t_security:'安全设计', se_1:'多层鉴权：API Key、可选 OAuth、Telegram 用户绑定。', se_2:'细粒度限流与隔离：按 Key、IP 与端点做配额与桶隔离。', se_3:'提示词与输出审计：高风险操作需显式确认与模板化执行。', se_4:'可观测性：结构化日志、请求追踪与异常告警。',
-        t_community:'社区与贡献', cm_1:'欢迎通过 Issue/PR 贡献能力插件、数据适配器与语言包；也可参与提示词与样例库建设。', cm_2:'社交媒体：Twitter / X', cm_3:'机器人：Telegram 命令 /start /help /tweet 等',
-        t_faq:'常见问题（FAQ）', fq_q1:'如何集成到我自己的机器人？', fq_a1:'参考 API 文档与示例，使用 /api/* 端点对接；生产建议配置 Webhook 并启用鉴权与限流。', fq_q2:'是否支持多链？', fq_a2:'当前以 OKC 为主，计划逐步接入更多 EVM 兼容链，并通过适配层扩展数据源。', fq_q3:'我的数据会用于模型训练吗？', fq_a3:'默认不会。仅在用户授权的前提下，匿名化聚合数据可用于质量改进与指标统计。',
-        t_roadmap:'路线图', r_1:'Q3：完善多语言与钱包监控能力；发布开发者 API Key 管理', r_2:'Q4：策略回测与提示词市场；更多链支持与可插拔数据源', r_3:'Q1：开放插件接口，支持自定义 AI Agent 与工作流',
-        t_legal:'法律与合规', l_1:'本项目不提供投资建议。请遵守当地法律法规，合理使用工具与接口。'
-      },
-      en: {
-        toc: 'Contents', i_follow:'Follow on X / Twitter', i_intro:'1. Introduction', i_vision:'2. Vision & Goals', i_overview:'3. Capabilities', i_arch:'4. Architecture', i_api:'5. APIs & Security', i_tg:'6. Telegram Integration', i_pricing:'7. Pricing', i_privacy:'8. Privacy & Data', i_security:'9. Security', i_community:'10. Community', i_faq:'11. FAQ', i_roadmap:'12. Roadmap', i_legal:'13. Legal',
-        t_intro:'OKX Chain AI Assistant · Whitepaper', p_intro:'An on-chain AI assistant for OKX Chain, combining on-chain data, AI reasoning and bot interfaces for token analysis, contract/NFT generation, wallet monitoring and multilingual UX.',
-        t_stats:'Public Facts', t_links:'Links', stat_ca:'Contract Address', copy:'Copy', t_vision:'Vision & Goals', v_1:'Democratize on-chain analysis with AI.', v_2:'Provide a secure, compliant toolchain and automation.', v_3:'Connect ecosystem partners and developers via bot and APIs.',
-        t_overview:'Capabilities', c_1:'Token analysis: AI narrative from a contract address.', c_2:'Smart contracts & NFTs: generate from natural language.', c_3:'Wallet monitor: buy detection and Telegram push.', c_4:'Multilingual: Chinese/English, extensible to more.',
-        t_arch:'Architecture', a_1:'Serverless architecture on Firebase Functions + Express, integrating OKX RPC, OpenAI, Telegram Bot and Realtime Database.',
-        t_api:'APIs & Security', api_1:'Auth: custom API Key (x-api-key or Authorization: Bearer).', api_2:'Rate limiting by subscription quota.', api_3:'Endpoints: /api/chat, /api/token/analyze, /api/chain/analyze, /api/wallet/:addr, etc.',
-        t_tg:'Telegram Integration', tg_1:'Supports both polling and webhook. Webhook is recommended in production.', tg_2:'Commands: /start /help /analyze /wallet /monitor /tweet', tg_3:'Multilingual menu, Markdown sanitization, long message chunking.',
-        t_pricing:'Pricing', pr_1:'Free: basic queries and limited AI chats.', pr_2:'Pro: higher quota, priority queue, advanced endpoints.', pr_3:'Enterprise: dedicated rate limits, SLA, private deployment and custom integrations.',
-        t_privacy:'Privacy & Data', pv_1:'Store minimal data only when necessary (counters, error logs); no private keys.', pv_2:'Deletability: users can delete sessions and monitors on demand.', pv_3:'When calling third-party services (LLM, RPC), minimize fields and anonymize.',
-        t_security:'Security', se_1:'Multi-layer auth: API keys, optional OAuth, Telegram binding.', se_2:'Fine-grained rate limiting and isolation by key, IP and endpoint.', se_3:'Prompt/output guardrails: explicit confirmation for risky ops and templated execution.', se_4:'Observability: structured logs, tracing and alerting.',
-        t_community:'Community & Contribution', cm_1:'Contribute plugins, data adapters and language packs via issues/PRs; help build prompts and examples.', cm_2:'Social: Twitter / X', cm_3:'Bots: Telegram commands /start /help /tweet',
-        t_faq:'FAQ', fq_q1:'How do I integrate with my own bot?', fq_a1:'Use the /api/* endpoints and examples; in production, set up webhook, auth and rate limiting.', fq_q2:'Do you support multiple chains?', fq_a2:'OKC first; more EVM chains planned via adapter layer.', fq_q3:'Is my data used for model training?', fq_a3:'Not by default. With consent, anonymized aggregates may improve quality and metrics.',
-        t_roadmap:'Roadmap', r_1:'Q3: Multilingual & wallet monitor enhancements; API key console', r_2:'Q4: Strategy backtesting, prompt marketplace; multi-chain & pluggable data sources', r_3:'Q1: Plugin interface for custom AI agents & workflows',
-        t_legal:'Legal & Compliance', l_1:'No investment advice. Use responsibly and comply with local laws.'
-      }
-    };
-    const $ = (s) => document.querySelector(s);
-    const $$ = (s) => document.querySelectorAll(s);
-    const applyLang = (lang) => {
-      document.documentElement.lang = lang;
-      const dict = i18n[lang];
-      $$('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if (dict[key]) el.innerText = dict[key]; });
-      $('#btn-zh').classList.toggle('active', lang==='zh');
-      $('#btn-en').classList.toggle('active', lang==='en');
-      $('#edition-badge').innerText = lang==='zh' ? '白皮书' : 'Whitepaper';
-    };
-    $('#btn-zh').addEventListener('click', ()=>applyLang('zh'));
-    $('#btn-en').addEventListener('click', ()=>applyLang('en'));
-    applyLang('zh');
-    $('#year').innerText = new Date().getFullYear();
-    const copyButton = document.getElementById('copy-ca');
-    if (copyButton) {
-      copyButton.addEventListener('click', async () => {
-        const ca = document.getElementById('contract-address')?.innerText?.trim();
-        try {
-          if (ca) await navigator.clipboard.writeText(ca);
-          const old = copyButton.innerText;
-          copyButton.innerText = document.documentElement.lang === 'zh' ? '已复制' : 'Copied';
-          setTimeout(()=>{ copyButton.innerText = old; }, 1200);
-        } catch (e) {
-          console.error('copy failed', e);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI文明模拟器 - 文明的兴衰</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#FF7D00',
+                        success: '#00B42A',
+                        warning: '#FF7D00',
+                        danger: '#F53F3F',
+                        dark: '#1D2129',
+                        light: '#F2F3F5'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
         }
-      });
-    }
-  </script>
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .simulation-grid {
+                background-size: 32px 16px;
+                background-image:
+                    linear-gradient(to right, rgba(0,255,0,0.25) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0,255,0,0.25) 1px, transparent 1px);
+            }
+            .ascii-btn { color: #22c55e; }
+            .ascii-select { color: #22c55e; background: transparent; border: 1px dashed rgba(34,197,94,0.4); padding: 2px 6px; }
+            .ascii-card { border: 1px solid rgba(34,197,94,0.4); }
+        }
+    </style>
+</head>
+<body class="bg-black text-green-300 min-h-screen flex flex-col font-mono">
+    <!-- 顶部导航栏 -->
+    <header class="bg-black/90 border-b border-green-800 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-primary text-2xl">[CIV]</span>
+                <h1 class="text-xl md:text-2xl font-bold text-gray-200">文明模拟器</h1>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-6">
+                <button id="about-btn" class="hover:text-primary transition-colors duration-200">[ 关于 ]</button>
+                <button id="reset-btn" class="hover:text-primary transition-colors duration-200">[ 重置 ]</button>
+            </div>
+            
+            <div class="flex md:hidden">
+                <button id="mobile-menu-btn" class="text-gray-300 hover:text-white text-xl">[≡]</button>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-black/95 border-t border-green-800">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+                <button id="mobile-about-btn" class="py-2 text-green-300 text-left">[ 关于 ]</button>
+                <button id="mobile-reset-btn" class="py-2 text-green-300 text-left">[ 重置 ]</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="flex-grow container mx-auto px-4 py-6 md:py-10">
+        <!-- 控制面板 -->
+        <div class="bg-dark/50 border border-gray-800 p-4 mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-4">
+                    <button id="start-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200">[ 开始 ]</button>
+                    <button id="pause-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden">[ 暂停 ]</button>
+                    <button id="speed-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200">[ <span id="speed-text">1x 速度</span> ]</button>
+                </div>
+
+                <div class="flex items-center space-x-3 w-full md:w-auto">
+                    <button id="ai-toggle-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-all duration-200">[ <span id="ai-toggle-text">AI演化 关闭</span> ]</button>
+                    <div class="flex items-center bg-dark/70 border border-gray-800 rounded-lg px-3 py-2">
+                        <span class="mr-2 text-gray-400">[频率]</span>
+                        <select id="ai-frequency" class="bg-transparent text-sm outline-none">
+                            <option value="1">每1天</option>
+                            <option value="3" selected>每3天</option>
+                            <option value="7">每7天</option>
+                            <option value="14">每14天</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center bg-dark/70 border border-gray-800 rounded-lg px-3 py-2">
+                        <span class="mr-2 text-gray-400">[模式]</span>
+                        <select id="mode-select" class="bg-transparent text-sm outline-none">
+                            <option value="peace">和平</option>
+                            <option value="normal" selected>标准</option>
+                            <option value="disaster">灾变</option>
+                        </select>
+                    </div>
+                    <label class="flex items-center bg-dark/70 border border-gray-800 rounded-lg px-3 py-2 cursor-pointer select-none">[ 自动存档 ]<input id="autosave-toggle" type="checkbox" class="ml-2"></label>
+                    <button id="ai-trigger-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-all duration-200">[ 立即演化 ]</button>
+                    <div id="ai-status" class="text-xs text-gray-400 hidden">( 计算中 ... )</div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full md:w-auto">
+                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌─ 模拟时间 ─┐
+│ <span id="simulation-time">0年0天</span>
+└──────────┘</pre>
+                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 人口 ──┐
+│ <span id="population">0</span>
+└────────┘</pre>
+                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌ 技术水平 ┐
+│ <span id="technology">0</span>
+└────────┘</pre>
+                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 稳定性 ─┐
+│ <span id="stability">0%</span>
+└──────────┘</pre>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 文明阶段指示器 -->
+        <div class="mb-6">
+            <div class="flex justify-between text-xs text-gray-400 mb-1">
+                <span>原始社会</span>
+                <span>农业社会</span>
+                <span>工业革命</span>
+                <span>信息时代</span>
+                <span>太空时代</span>
+            </div>
+            <div id="ascii-stage-bar" class="font-mono text-xs text-green-400 mt-1"></div>
+        </div>
+        
+        <!-- 文明模拟区域 -->
+        <div class="relative bg-dark/50 border border-gray-800 p-4 md:p-6 mb-6 overflow-hidden">
+            <div id="simulation-area" class="simulation-grid w-full aspect-[16/9] overflow-hidden relative">
+                <!-- 文明符号将在这里动态生成 -->
+                <div id="civilization-symbols" class="w-full h-full"></div>
+                <!-- ASCII 覆盖层（路线/区域/标签/结构） -->
+                <div id="ascii-overlays" class="pointer-events-none absolute inset-0"></div>
+                <!-- ASCII 画布（整帧快照） -->
+                <pre id="ascii-canvas" class="absolute inset-0 m-0 p-2 text-[10px] leading-3 overflow-hidden whitespace-pre text-green-400 pointer-events-none"></pre>
+                <!-- 敌方 ASCII 覆盖层（红色） -->
+                <div id="ascii-overlays-enemy" class="pointer-events-none absolute inset-0"></div>
+                <!-- 敌方 ASCII 画布（整帧快照，红色） -->
+                <pre id="ascii-canvas-enemy" class="absolute inset-0 m-0 p-2 text-[10px] leading-3 overflow-hidden whitespace-pre text-red-400 pointer-events-none"></pre>
+                <!-- 阵营提示 -->
+                <div class="pointer-events-none absolute right-2 bottom-2 bg-black/40 border border-gray-700 rounded px-2 py-1 text-[11px] leading-4">
+                    <div><span class="text-green-400">■</span> chat-gpt5</div>
+                    <div><span class="text-red-400">■</span> claude-4.1</div>
+                </div>
+                
+                <!-- 加载覆盖层 -->
+                <div id="loading-overlay" class="absolute inset-0 bg-dark/80 flex flex-col items-center justify-center z-10">
+                    <div class="text-4xl text-primary mb-4 animate-spin">◌</div>
+                    <p class="text-lg">文明初始化中...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 事件日志和统计信息 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- 事件日志 -->
+            <div class="lg:col-span-2 bg-dark/50 border border-gray-800 p-4">
+                <h2 class="text-lg font-semibold mb-3 flex items-center">[ 文明大事记 ]</h2>
+                <div id="event-log" class="h-64 overflow-y-auto pr-2 text-sm space-y-2">
+                    <p class="text-gray-400 italic">模拟开始后将显示文明发展事件...</p>
+                </div>
+            </div>
+            
+            <!-- AI 指南 + 指标与符号解释 -->
+            <div class="bg-dark/50 border border-gray-800 p-4">
+                <h2 class="text-lg font-semibold mb-3 flex items-center">[ AI 指南（可选） ]</h2>
+                <textarea id="guidelines-input" class="w-full bg-dark/70 border border-gray-800 rounded-lg p-3 text-sm mb-4 outline-none" rows="3" placeholder="给 AI 的演化方向提示，例如：优先绿色发展，减少战争概率……"></textarea>
+                <div class="mb-4">
+<pre class="bg-black/60 rounded-lg p-3 border border-green-800 text-xs leading-5 whitespace-pre-wrap">┌── AI 心情 ──┐
+│ <span id="ai-mood-face">:|</span>  <span id="ai-mood-label">平稳</span>
+│ <span id="ai-mood-bar">[..............] 0%</span>
+└───────────┘</pre>
+                </div>
+                <h2 class="text-lg font-semibold mb-3 flex items-center">[ 文明指标 ]</h2>
+                <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 资源 ──┐
+│ <span id="resources">50</span>
+└────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 环境 ──┐
+│ <span id="environment">50</span>
+└────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 经济 ──┐
+│ <span id="economy">50</span>
+└────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 文化 ──┐
+│ <span id="culture">50</span>
+└────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 军力 ──┐
+│ <span id="military">50</span>
+└────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 民心 ──┐
+│ <span id="happiness">50</span>
+└────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 外交 ──┐
+│ <span id="diplomacy">50</span>
+└────────┘</pre>
+                </div>
+                <h2 class="text-lg font-semibold mb-3 flex items-center">[ 符号说明 ]</h2>
+                <div class="space-y-2 text-sm font-mono">
+                    <div>[定居势场纹理] 聚落影响范围（密度越高字符越粗）</div>
+                    <div>[技术扩散纹理] 网络/创新传播（+ 与 * 的密度）</div>
+                    <div>[防御密度纹理] 要塞带（# 阶梯分布）</div>
+                    <div>[治理枢纽纹理] 枢纽及通道（H 与 - 的组合）</div>
+                    <div>[冲突裂痕纹理] 张力与断裂（x/X 断裂带）</div>
+                    <div>[突破星云纹理] 突破溢出范围（* 星簇）</div>
+                </div>
+                
+                <hr class="my-4 border-gray-800">
+                
+                <!-- 生命周期指示器 -->
+                <h2 class="text-lg font-semibold mb-3 flex items-center">[ 文明生命周期 ]</h2>
+                <div class="relative pt-1">
+                    <div class="flex mb-2 items-center justify-between">
+                        <div>
+                            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-primary/80 bg-primary/10">
+                                生命周期
+                            </span>
+                        </div>
+                        <div class="text-right">
+                            <span id="lifespan-percentage" class="text-xs font-semibold inline-block text-primary">
+                                0%
+                            </span>
+                        </div>
+                    </div>
+                    <pre id="lifespan-ascii" class="font-mono text-xs text-green-400"></pre>
+                </div>
+                <p id="life-stage" class="text-center text-sm text-gray-400 italic">等待文明诞生...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 关于模态框 -->
+    <div id="about-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-dark border border-gray-800 rounded-xl p-6 max-w-lg w-full mx-4 shadow-2xl transform transition-all">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">关于文明模拟器</h2>
+                <button id="close-about" class="text-gray-400 hover:text-white">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-4 text-gray-300">
+                <p>这是一个AI驱动的文明模拟系统，展示一个虚拟文明从诞生到可能衰变的全过程。</p>
+                
+                <div>
+                    <h3 class="font-semibold text-white mb-1">模拟规则：</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>1分钟 = 模拟世界中的1天</li>
+                        <li>文明会经历诞生、成长、繁荣和可能的衰变</li>
+                        <li>多种因素影响文明发展：人口、技术、资源和稳定性</li>
+                        <li>随机事件会带来机遇或挑战</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold text-white mb-1">文明阶段：</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>原始社会 - 文明的起源</li>
+                        <li>农业社会 - 定居与农业发展</li>
+                        <li>工业革命 - 技术与生产力飞跃</li>
+                        <li>信息时代 - 全球连接与数字化</li>
+                        <li>太空时代 - 探索地球之外的领域</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-6">
+                <button id="start-from-about" class="w-full bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all duration-200">
+                    开始模拟
+                </button>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script>
+        // 文明模拟器核心逻辑
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM元素引用
+            const startBtn = document.getElementById('start-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            const speedBtn = document.getElementById('speed-btn');
+            const speedText = document.getElementById('speed-text');
+            const resetBtn = document.getElementById('reset-btn');
+            const mobileResetBtn = document.getElementById('mobile-reset-btn');
+            const aboutBtn = document.getElementById('about-btn');
+            const mobileAboutBtn = document.getElementById('mobile-about-btn');
+            const closeAboutBtn = document.getElementById('close-about');
+            const startFromAboutBtn = document.getElementById('start-from-about');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const simulationTimeEl = document.getElementById('simulation-time');
+            const populationEl = document.getElementById('population');
+            const technologyEl = document.getElementById('technology');
+            const stabilityEl = document.getElementById('stability');
+            const civilizationStageEl = document.getElementById('civilization-stage');
+            const eventLogEl = document.getElementById('event-log');
+            const simulationArea = document.getElementById('simulation-area');
+            const civilizationSymbols = document.getElementById('civilization-symbols');
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const lifespanProgress = document.getElementById('lifespan-progress');
+            const lifespanPercentage = document.getElementById('lifespan-percentage');
+            const lifeStageEl = document.getElementById('life-stage');
+            const aboutModal = document.getElementById('about-modal');
+            
+            // 模拟状态变量
+            let isRunning = false;
+            let simulationSpeed = 1; // 1x, 2x, 4x, 8x
+            let simulationInterval;
+            let day = 0;
+            let year = 0;
+            let totalDays = 0;
+            let aiEnabled = false;
+            let aiFrequency = 3; // 天
+            let aiPending = false;
+            let mode = 'normal';
+            let autosaveEnabled = true;
+            let guidelines = '';
+            
+            // 文明属性
+            let civilization = {
+                population: 10,
+                technology: 0,
+                stability: 50,
+                resources: 50,
+                environment: 50,
+                economy: 50,
+                culture: 50,
+                military: 50,
+                happiness: 50,
+                diplomacy: 50,
+                settlements: [],
+                events: [],
+                stage: 0, // 0-4对应五个文明阶段
+                lifespan: Math.floor(Math.random() * 3000) + 2000, // 文明预期寿命(天)
+                isDeclining: false,
+                lastEventDay: 0
+            };
+            // 敌方属性
+            let enemy = {
+                population: 8,
+                technology: 0,
+                stability: 50,
+                resources: 50,
+                environment: 50,
+                economy: 50,
+                culture: 50,
+                military: 55,
+                happiness: 45,
+                diplomacy: 30,
+                settlements: [],
+                stage: 0,
+                isDeclining: false
+            };
+            
+            // 文明符号类型定义
+            const symbolTypes = [
+                { type: 'settlement', label: '●', color: 'bg-success/20 text-success', chance: 30 },       // 定居点
+                { type: 'technology', label: '△', color: 'bg-primary/20 text-primary', chance: 20 },     // 技术
+                { type: 'defense', label: '□', color: 'bg-secondary/20 text-secondary', chance: 15 },     // 防御
+                { type: 'government', label: '◆', color: 'bg-warning/20 text-warning', chance: 15 },      // 治理
+                { type: 'conflict', label: '✕', color: 'bg-danger/20 text-danger', chance: 10 },          // 冲突
+                { type: 'breakthrough', label: '★', color: 'bg-purple-500/20 text-purple-400', chance: 10 } // 突破
+            ];
+
+            // Cloud Function 接口（自动选择本地或线上）
+            const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+            const EVOLVE_ENDPOINT = isLocal
+                ? 'http://localhost:5001/chat-294cc/us-central1/evolve'
+                : 'https://us-central1-chat-294cc.cloudfunctions.net/evolve';
+
+            // 敌方/本地覆盖层与画布缓存
+            let localOverlays = { routes: [], regions: [], labels: [], structures: [], canvas: null };
+            let lastAIOverlays = null;
+            let localEnemyOverlays = { routes: [], regions: [], labels: [], structures: [], canvas: null };
+            let lastAIEnemyOverlays = null;
+            let localFieldCanvas = null;
+            let localEnemyFieldCanvas = null;
+            const FIELD_CANVAS_COLS = 96;
+            const FIELD_CANVAS_ROWS = 48;
+            const FIELD_CHARSETS = {
+                settlement: [' ', '.', 'o', 'O'],
+                technology: [' ', '.', '+', '*'],
+                defense: [' ', '.', '+', '#'],
+                government: [' ', '.', '-', 'H'],
+                conflict: [' ', '.', 'x', 'X'],
+                breakthrough: [' ', '.', '*', '*']
+            };
+            const FIELD_SIGMA = {
+                settlement: 9,
+                technology: 10,
+                defense: 7,
+                government: 9,
+                conflict: 12,
+                breakthrough: 9
+            };
+            // 持续演化视觉循环参数
+            let visualPhase = 0;
+            let visualLoopHandle = null;
+            const VISUAL_INTERVAL_MS = 80;
+            const DRIFT_AMPLITUDE = 1.5; // 单位: 百分比坐标
+            let fieldCanvasEnabled = true;
+            let rowCursorLocal = 0;
+            let rowCursorEnemy = 0;
+            const ROWS_PER_FRAME = 6;
+            let rafId = null;
+            let frameParity = 0;
+            // 影响强度网格（用于领地判定）
+            let localInfluenceGrid = new Array(FIELD_CANVAS_ROWS).fill(null);
+            let enemyInfluenceGrid = new Array(FIELD_CANVAS_ROWS).fill(null);
+            
+            // 事件类型
+            const eventTypes = [
+                { 
+                    type: 'positive',
+                    messages: [
+                        '发现了丰富的资源储备，促进了经济增长',
+                        '重要的技术突破推动了文明进步',
+                        '和平条约的签订带来了稳定的发展环境',
+                        '农业革新大幅提高了粮食产量',
+                        '杰出领袖出现，增强了社会凝聚力',
+                        '新的能源来源被发现',
+                        '医学进步延长了平均寿命',
+                        '文化繁荣，艺术与科学齐头并进'
+                    ],
+                    effects: { population: 5, technology: 3, stability: 5 }
+                },
+                { 
+                    type: 'negative',
+                    messages: [
+                        '自然灾害导致了重大损失',
+                        '资源短缺引发社会动荡',
+                        '内部冲突削弱了文明凝聚力',
+                        '疾病流行导致人口减少',
+                        '技术停滞不前，发展陷入瓶颈',
+                        '外部威胁加剧了紧张局势',
+                        '环境恶化开始影响生存条件',
+                        '经济危机导致生活水平下降'
+                    ],
+                    effects: { population: -5, technology: -2, stability: -8 }
+                },
+                { 
+                    type: 'neutral',
+                    messages: [
+                        '举行了一次重要的文化庆典',
+                        '新的社会习俗开始形成',
+                        '探索队发现了未知的区域',
+                        '新的艺术流派开始流行',
+                        '传统知识得到整理和保存',
+                        '气候出现轻微变化',
+                        '新的贸易路线被开辟',
+                        '教育体系进行了改革'
+                    ],
+                    effects: { population: 1, technology: 1, stability: 0 }
+                }
+            ];
+            
+            // 文明阶段定义
+            const civilizationStages = [
+                { name: '原始社会', minTech: 0, maxTech: 20, color: '#00B42A' },
+                { name: '农业社会', minTech: 20, maxTech: 40, color: '#722ED1' },
+                { name: '工业革命', minTech: 40, maxTech: 60, color: '#FF7D00' },
+                { name: '信息时代', minTech: 60, maxTech: 80, color: '#165DFF' },
+                { name: '太空时代', minTech: 80, maxTech: 100, color: '#86909C' }
+            ];
+            
+            // 生命周期阶段
+            const lifeStages = [
+                { name: '诞生期', range: [0, 0.1] },
+                { name: '成长期', range: [0.1, 0.4] },
+                { name: '繁荣期', range: [0.4, 0.7] },
+                { name: '衰退期', range: [0.7, 0.9] },
+                { name: '末期', range: [0.9, 1.0] }
+            ];
+            
+            // 初始化
+            function initialize() {
+                // 重置文明状态
+                civilization = {
+                    population: 10,
+                    technology: 0,
+                    stability: 50,
+                    resources: 50,
+                    environment: 50,
+                    economy: 50,
+                    culture: 50,
+                    military: 50,
+                    happiness: 50,
+                    diplomacy: 50,
+                    settlements: [],
+                    events: [],
+                    stage: 0,
+                    lifespan: Math.floor(Math.random() * 3000) + 2000, // 5-15年左右
+                    isDeclining: false,
+                    lastEventDay: 0
+                };
+                
+                // 重置时间
+                day = 0;
+                year = 0;
+                totalDays = 0;
+                
+                // 清空符号和事件
+                civilizationSymbols.innerHTML = '';
+                eventLogEl.innerHTML = '<p class="text-gray-400 italic">模拟开始后将显示文明发展事件...</p>';
+                // 清空抽象覆盖层
+                localOverlays = { routes: [], regions: [], labels: [], structures: [], canvas: null };
+                lastAIOverlays = null;
+                localFieldCanvas = null;
+                // 敌方初始化
+                enemy = {
+                    population: 8,
+                    technology: 0,
+                    stability: 50,
+                    resources: 50,
+                    environment: 50,
+                    economy: 50,
+                    culture: 50,
+                    military: 55,
+                    happiness: 45,
+                    diplomacy: 30,
+                    settlements: [],
+                    stage: 0,
+                    isDeclining: false
+                };
+                localEnemyOverlays = { routes: [], regions: [], labels: [], structures: [], canvas: null };
+                lastAIEnemyOverlays = null;
+                localEnemyFieldCanvas = null;
+                renderMergedOverlays(null);
+                renderMergedEnemyOverlays(null);
+                const asciiCanvas = document.getElementById('ascii-canvas');
+                if (asciiCanvas) asciiCanvas.textContent = '';
+                const asciiCanvasEnemy = document.getElementById('ascii-canvas-enemy');
+                if (asciiCanvasEnemy) asciiCanvasEnemy.textContent = '';
+                // 重置并启动视觉循环
+                stopVisualLoop();
+                startVisualLoop();
+                
+                // 更新UI
+                updateUI();
+                
+                // 显示加载状态
+                loadingOverlay.classList.remove('hidden');
+                
+                // 模拟初始化过程
+                setTimeout(() => {
+                    // 创建初始定居点
+                    addSymbol('settlement', 50, 50);
+                    addEnemySymbol('settlement', 72, 52);
+                    addEvent('neutral', '文明在这片土地上诞生了');
+                    
+                    // 隐藏加载状态
+                    loadingOverlay.classList.add('hidden');
+                }, 1500);
+            }
+            
+            // 更新UI显示
+            function updateUI() {
+                // 更新时间显示
+                simulationTimeEl.textContent = `${year}年${day}天`;
+                
+                // 更新文明属性
+                populationEl.textContent = formatNumber(civilization.population);
+                technologyEl.textContent = Math.round(civilization.technology);
+                stabilityEl.textContent = `${Math.round(civilization.stability)}%`;
+                document.getElementById('resources').textContent = Math.round(civilization.resources);
+                document.getElementById('environment').textContent = Math.round(civilization.environment);
+                document.getElementById('economy').textContent = Math.round(civilization.economy);
+                document.getElementById('culture').textContent = Math.round(civilization.culture);
+                document.getElementById('military').textContent = Math.round(civilization.military);
+                document.getElementById('happiness').textContent = Math.round(civilization.happiness);
+                document.getElementById('diplomacy').textContent = Math.round(civilization.diplomacy);
+                
+                // 更新文明阶段
+                updateCivilizationStage();
+                updateAsciiStageBar();
+                
+                // 更新生命周期
+                updateLifespanProgress();
+            }
+
+            // 添加不影响数值的叙事事件
+            function addNarrativeEvent(eventType, message) {
+                const eventEl = document.createElement('pre');
+                eventEl.className = 'font-mono text-xs p-2 rounded-lg bg-gray-800/60 text-gray-300 whitespace-pre-wrap';
+                const prefix = eventType === 'positive' ? '[+]' : eventType === 'negative' ? '[-]' : '[*]';
+                eventEl.textContent = `${prefix} ${year}年${day}天 | ${message}`;
+                if (eventLogEl.firstChild) {
+                    eventLogEl.insertBefore(eventEl, eventLogEl.firstChild);
+                } else {
+                    eventLogEl.appendChild(eventEl);
+                }
+                eventLogEl.scrollTop = 0;
+                civilization.events.push({ day: totalDays, type: eventType, message });
+                civilization.lastEventDay = totalDays;
+            }
+
+            function clamp(val, min, max) { return Math.max(min, Math.min(max, val)); }
+
+            function applyAIDelta(result) {
+                if (!result || !result.stateDelta) return;
+                const d = result.stateDelta;
+                if (typeof d.populationDelta === 'number') {
+                    civilization.population = Math.max(1, civilization.population + d.populationDelta);
+                }
+                if (typeof d.technologyDelta === 'number') {
+                    civilization.technology = clamp(civilization.technology + d.technologyDelta, 0, 100);
+                }
+                if (typeof d.stabilityDelta === 'number') {
+                    civilization.stability = clamp(civilization.stability + d.stabilityDelta, 0, 100);
+                }
+                if (typeof d.resourcesDelta === 'number') {
+                    civilization.resources = clamp(civilization.resources + d.resourcesDelta, 0, 100);
+                }
+                if (typeof d.environmentDelta === 'number') {
+                    civilization.environment = clamp(civilization.environment + d.environmentDelta, 0, 100);
+                }
+                if (typeof d.economyDelta === 'number') {
+                    civilization.economy = clamp(civilization.economy + d.economyDelta, 0, 100);
+                }
+                if (typeof d.cultureDelta === 'number') {
+                    civilization.culture = clamp(civilization.culture + d.cultureDelta, 0, 100);
+                }
+                if (typeof d.militaryDelta === 'number') {
+                    civilization.military = clamp(civilization.military + d.militaryDelta, 0, 100);
+                }
+                if (typeof d.happinessDelta === 'number') {
+                    civilization.happiness = clamp(civilization.happiness + d.happinessDelta, 0, 100);
+                }
+                if (typeof d.diplomacyDelta === 'number') {
+                    civilization.diplomacy = clamp(civilization.diplomacy + d.diplomacyDelta, 0, 100);
+                }
+                if (typeof d.isDeclining === 'boolean') {
+                    civilization.isDeclining = d.isDeclining;
+                }
+                if (Array.isArray(result.symbols)) {
+                    result.symbols.slice(0, 3).forEach(s => {
+                        if (!s || !s.type || typeof s.x !== 'number' || typeof s.y !== 'number') return;
+                        const t = ['settlement','technology','defense','government','conflict','breakthrough'].includes(s.type) ? s.type : 'settlement';
+                        const x = clamp(s.x, 10, 90);
+                        const y = clamp(s.y, 10, 90);
+                        addSymbol(t, x, y, !!s.isLarge);
+                    });
+                }
+                // 敌方增量与符号
+                if (result.enemyDelta) {
+                    const d2 = result.enemyDelta;
+                    if (typeof d2.populationDelta === 'number') enemy.population = Math.max(1, enemy.population + d2.populationDelta);
+                    if (typeof d2.technologyDelta === 'number') enemy.technology = clamp(enemy.technology + d2.technologyDelta, 0, 100);
+                    if (typeof d2.stabilityDelta === 'number') enemy.stability = clamp(enemy.stability + d2.stabilityDelta, 0, 100);
+                    if (typeof d2.resourcesDelta === 'number') enemy.resources = clamp(enemy.resources + d2.resourcesDelta, 0, 100);
+                    if (typeof d2.environmentDelta === 'number') enemy.environment = clamp(enemy.environment + d2.environmentDelta, 0, 100);
+                    if (typeof d2.economyDelta === 'number') enemy.economy = clamp(enemy.economy + d2.economyDelta, 0, 100);
+                    if (typeof d2.cultureDelta === 'number') enemy.culture = clamp(enemy.culture + d2.cultureDelta, 0, 100);
+                    if (typeof d2.militaryDelta === 'number') enemy.military = clamp(enemy.military + d2.militaryDelta, 0, 100);
+                    if (typeof d2.happinessDelta === 'number') enemy.happiness = clamp(enemy.happiness + d2.happinessDelta, 0, 100);
+                    if (typeof d2.diplomacyDelta === 'number') enemy.diplomacy = clamp(enemy.diplomacy + d2.diplomacyDelta, 0, 100);
+                    if (typeof d2.isDeclining === 'boolean') enemy.isDeclining = d2.isDeclining;
+                }
+                if (Array.isArray(result.enemySymbols)) {
+                    result.enemySymbols.slice(0, 3).forEach(s => {
+                        if (!s || !s.type || typeof s.x !== 'number' || typeof s.y !== 'number') return;
+                        const t = ['settlement','technology','defense','government','conflict','breakthrough'].includes(s.type) ? s.type : 'settlement';
+                        const x = clamp(s.x, 10, 90);
+                        const y = clamp(s.y, 10, 90);
+                        addEnemySymbol(t, x, y, !!s.isLarge);
+                    });
+                }
+                if (Array.isArray(result.events)) {
+                    result.events.slice(0, 4).forEach(ev => {
+                        const t = ev?.type === 'positive' || ev?.type === 'negative' ? ev.type : 'neutral';
+                        addNarrativeEvent(t, ev?.message || 'AI生成的事件');
+                    });
+                }
+                if (result.battle && result.battle.summary) {
+                    addNarrativeEvent('neutral', `战报: ${result.battle.summary}`);
+                }
+                // 计算 AI 心情（基于正负事件占比与稳定性）
+                try {
+                    const recent = (result.events || []).slice(0, 4);
+                    const positive = recent.filter(e => e?.type === 'positive').length;
+                    const negative = recent.filter(e => e?.type === 'negative').length;
+                    const moodScore = clamp(50 + (positive - negative) * 10 + (civilization.stability - 50) * 0.2, 0, 100);
+                    updateAIMood(moodScore);
+                } catch {}
+
+                // 绘制 ASCII 覆盖层
+                try {
+                    if (result.overlays) { lastAIOverlays = result.overlays; }
+                    renderMergedOverlays(lastAIOverlays);
+                } catch {}
+                // 敌方覆盖层
+                try {
+                    if (result.enemyOverlays) { lastAIEnemyOverlays = result.enemyOverlays; }
+                    renderMergedEnemyOverlays(lastAIEnemyOverlays);
+                } catch {}
+                // 渲染整帧 ASCII 画布
+                try {
+                    renderAsciiCanvasMerged();
+                    renderEnemyAsciiCanvasMerged();
+                } catch {}
+            }
+
+            function percentToPxX(p) { return (p / 100) * simulationArea.clientWidth; }
+            function percentToPxY(p) { return (p / 100) * simulationArea.clientHeight; }
+
+            function renderAsciiOverlays(overlays) {
+                const layer = document.getElementById('ascii-overlays');
+                if (!layer) return;
+                layer.innerHTML = '';
+                const ns = 'http://www.w3.org/2000/svg';
+                // 用 SVG 便于画线，但只渲染 ASCII 字符
+                const svg = document.createElementNS(ns, 'svg');
+                svg.setAttribute('class', 'absolute inset-0 w-full h-full');
+                svg.setAttribute('viewBox', `0 0 ${simulationArea.clientWidth} ${simulationArea.clientHeight}`);
+
+                // routes: 用小文字连续铺设字符
+                (overlays.routes || []).slice(0, 3).forEach(r => {
+                    const [x1,y1] = r.from || [10,10];
+                    const [x2,y2] = r.to || [90,90];
+                    const ch = r.char || '-';
+                    const steps = 18;
+                    for (let i=0;i<=steps;i++) {
+                        const t = i/steps;
+                        const x = percentToPxX(x1 + (x2 - x1)*t);
+                        const y = percentToPxY(y1 + (y2 - y1)*t);
+                        const text = document.createElementNS(ns, 'text');
+                        text.setAttribute('x', x);
+                        text.setAttribute('y', y);
+                        text.setAttribute('fill', '#15803d');
+                        text.setAttribute('font-size', '9');
+                        text.textContent = ch;
+                        svg.appendChild(text);
+                    }
+                });
+
+                // regions: 圆环点阵
+                (overlays.regions || []).slice(0, 4).forEach(g => {
+                    const [cx,cy] = g.center || [50,50];
+                    const r = Math.max(5, Math.min(16, g.radius || 8));
+                    const ch = g.char || '*';
+                    const dots = r * 7;
+                    for (let i=0;i<dots;i++) {
+                        const a = (i/dots) * 2*Math.PI;
+                        const x = percentToPxX(cx + Math.cos(a)*r);
+                        const y = percentToPxY(cy + Math.sin(a)*r);
+                        const t = document.createElementNS(ns, 'text');
+                        t.setAttribute('x', x);
+                        t.setAttribute('y', y);
+                        t.setAttribute('fill', '#15803d');
+                        t.setAttribute('font-size', '9');
+                        t.textContent = ch;
+                        svg.appendChild(t);
+                    }
+                });
+
+                // labels
+                (overlays.labels || []).slice(0, 3).forEach(l => {
+                    const [lx,ly] = l.at || [50,50];
+                    const t = document.createElementNS(ns, 'text');
+                    t.setAttribute('x', percentToPxX(lx));
+                    t.setAttribute('y', percentToPxY(ly));
+                    t.setAttribute('fill', '#16a34a');
+                    t.setAttribute('font-size', '10');
+                    t.textContent = `[${l.text || 'LABEL'}]`;
+                    svg.appendChild(t);
+                });
+
+                // structures: 简单字符方阵
+                (overlays.structures || []).slice(0, 2).forEach(s => {
+                    const [sx,sy] = s.at || [50,50];
+                    const size = Math.max(3, Math.min(6, s.size || 4));
+                    for (let i=0;i<size;i++) {
+                        for (let j=0;j<size;j++) {
+                            const t = document.createElementNS(ns, 'text');
+                            t.setAttribute('x', percentToPxX(sx + i*0.6));
+                            t.setAttribute('y', percentToPxY(sy + j*0.6));
+                            t.setAttribute('fill', '#15803d');
+                            t.setAttribute('font-size', '9');
+                            t.textContent = s.shape === 'fort' ? '#' : s.shape === 'hub' ? '+' : '█';
+                            svg.appendChild(t);
+                        }
+                    }
+                });
+
+                layer.appendChild(svg);
+            }
+
+            // 敌方覆盖层（红色）
+            function renderAsciiOverlaysEnemy(overlays) {
+                const layer = document.getElementById('ascii-overlays-enemy');
+                if (!layer) return;
+                layer.innerHTML = '';
+                const ns = 'http://www.w3.org/2000/svg';
+                const svg = document.createElementNS(ns, 'svg');
+                svg.setAttribute('class', 'absolute inset-0 w-full h-full');
+                svg.setAttribute('viewBox', `0 0 ${simulationArea.clientWidth} ${simulationArea.clientHeight}`);
+                (overlays.routes || []).slice(0, 3).forEach(r => {
+                    const [x1,y1] = r.from || [10,10];
+                    const [x2,y2] = r.to || [90,90];
+                    const ch = r.char || '-';
+                    const steps = 18;
+                    for (let i=0;i<=steps;i++) {
+                        const t = i/steps;
+                        const x = percentToPxX(x1 + (x2 - x1)*t);
+                        const y = percentToPxY(y1 + (y2 - y1)*t);
+                        const text = document.createElementNS(ns, 'text');
+                        text.setAttribute('x', x);
+                        text.setAttribute('y', y);
+                        text.setAttribute('fill', '#dc2626');
+                        text.setAttribute('font-size', '9');
+                        text.textContent = ch;
+                        svg.appendChild(text);
+                    }
+                });
+                (overlays.regions || []).slice(0, 4).forEach(g => {
+                    const [cx,cy] = g.center || [50,50];
+                    const r = Math.max(5, Math.min(16, g.radius || 8));
+                    const ch = g.char || 'x';
+                    const dots = r * 7;
+                    for (let i=0;i<dots;i++) {
+                        const a = (i/dots) * 2*Math.PI;
+                        const x = percentToPxX(cx + Math.cos(a)*r);
+                        const y = percentToPxY(cy + Math.sin(a)*r);
+                        const t = document.createElementNS(ns, 'text');
+                        t.setAttribute('x', x);
+                        t.setAttribute('y', y);
+                        t.setAttribute('fill', '#ef4444');
+                        t.setAttribute('font-size', '9');
+                        t.textContent = ch;
+                        svg.appendChild(t);
+                    }
+                });
+                (overlays.labels || []).slice(0, 3).forEach(l => {
+                    const [lx,ly] = l.at || [50,50];
+                    const t = document.createElementNS(ns, 'text');
+                    t.setAttribute('x', percentToPxX(lx));
+                    t.setAttribute('y', percentToPxY(ly));
+                    t.setAttribute('fill', '#ef4444');
+                    t.setAttribute('font-size', '10');
+                    t.textContent = `[${l.text || 'ENEMY'}]`;
+                    svg.appendChild(t);
+                });
+                (overlays.structures || []).slice(0, 2).forEach(s => {
+                    const [sx,sy] = s.at || [50,50];
+                    const size = Math.max(3, Math.min(6, s.size || 4));
+                    for (let i=0;i<size;i++) {
+                        for (let j=0;j<size;j++) {
+                            const t = document.createElementNS(ns, 'text');
+                            t.setAttribute('x', percentToPxX(sx + i*0.6));
+                            t.setAttribute('y', percentToPxY(sy + j*0.6));
+                            t.setAttribute('fill', '#dc2626');
+                            t.setAttribute('font-size', '9');
+                            t.textContent = s.shape === 'fort' ? '#' : s.shape === 'hub' ? '+' : '█';
+                            svg.appendChild(t);
+                        }
+                    }
+                });
+                layer.appendChild(svg);
+            }
+
+            // 合并并渲染 AI 覆盖层与本地抽象覆盖层
+            function renderMergedOverlays(aiOverlays) {
+                const effectiveAI = aiOverlays || lastAIOverlays || null;
+                const merged = {
+                    routes: [
+                        ...((localOverlays && localOverlays.routes) || []),
+                        ...((effectiveAI && effectiveAI.routes) || [])
+                    ],
+                    regions: [
+                        ...((localOverlays && localOverlays.regions) || []),
+                        ...((effectiveAI && effectiveAI.regions) || [])
+                    ],
+                    labels: [
+                        ...((localOverlays && localOverlays.labels) || []),
+                        ...((effectiveAI && effectiveAI.labels) || [])
+                    ],
+                    structures: [
+                        ...((localOverlays && localOverlays.structures) || []),
+                        ...((effectiveAI && effectiveAI.structures) || [])
+                    ],
+                    canvas: effectiveAI && effectiveAI.canvas ? effectiveAI.canvas : null
+                };
+                renderAsciiOverlays(merged);
+            }
+
+            function renderMergedEnemyOverlays(aiOverlays) {
+                const effectiveAI = aiOverlays || lastAIEnemyOverlays || null;
+                const merged = {
+                    routes: [
+                        ...((localEnemyOverlays && localEnemyOverlays.routes) || []),
+                        ...((effectiveAI && effectiveAI.routes) || [])
+                    ],
+                    regions: [
+                        ...((localEnemyOverlays && localEnemyOverlays.regions) || []),
+                        ...((effectiveAI && effectiveAI.regions) || [])
+                    ],
+                    labels: [
+                        ...((localEnemyOverlays && localEnemyOverlays.labels) || []),
+                        ...((effectiveAI && effectiveAI.labels) || [])
+                    ],
+                    structures: [
+                        ...((localEnemyOverlays && localEnemyOverlays.structures) || []),
+                        ...((effectiveAI && effectiveAI.structures) || [])
+                    ],
+                    canvas: effectiveAI && effectiveAI.canvas ? effectiveAI.canvas : null
+                };
+                renderAsciiOverlaysEnemy(merged);
+            }
+
+            // 基于现有的定居/事件特征，重建本地抽象覆盖层
+            function rebuildLocalOverlays() {
+                localOverlays = { routes: [], regions: [], labels: [], structures: [], canvas: null };
+                const features = civilization.settlements || [];
+                for (const f of features) {
+                    const isLarge = !!f.isLarge;
+                    switch (f.type) {
+                        case 'settlement': {
+                            // 更抽象：只用较小半径标记中心，主要由场域画布表现
+                            localOverlays.regions.push({ center: [f.x, f.y], radius: isLarge ? 10 : 7, char: '.' });
+                            break;
+                        }
+                        case 'technology': {
+                            localOverlays.structures.push({ at: [f.x, f.y], size: isLarge ? 5 : 3, shape: 'hub' });
+                            break;
+                        }
+                        case 'defense': {
+                            localOverlays.structures.push({ at: [f.x, f.y], size: isLarge ? 4 : 3, shape: 'fort' });
+                            break;
+                        }
+                        case 'government': {
+                            localOverlays.structures.push({ at: [f.x, f.y], size: isLarge ? 4 : 3, shape: 'hub' });
+                            break;
+                        }
+                        case 'conflict': {
+                            localOverlays.regions.push({ center: [f.x, f.y], radius: isLarge ? 12 : 9, char: 'x' });
+                            break;
+                        }
+                        case 'breakthrough': {
+                            localOverlays.regions.push({ center: [f.x, f.y], radius: isLarge ? 10 : 8, char: '*' });
+                            break;
+                        }
+                        default: {
+                            localOverlays.regions.push({ center: [f.x, f.y], radius: isLarge ? 10 : 7, char: '.' });
+                        }
+                    }
+                }
+                renderMergedOverlays(null);
+                updateFieldCanvas();
+                renderAsciiCanvasMerged();
+            }
+
+            // 敌方抽象覆盖层
+            function rebuildEnemyLocalOverlays() {
+                localEnemyOverlays = { routes: [], regions: [], labels: [], structures: [], canvas: null };
+                const features = enemy.settlements || [];
+                for (const f of features) {
+                    const isLarge = !!f.isLarge;
+                    switch (f.type) {
+                        case 'settlement': {
+                            localEnemyOverlays.regions.push({ center: [f.x, f.y], radius: isLarge ? 10 : 7, char: 'x' });
+                            break;
+                        }
+                        case 'technology': {
+                            localEnemyOverlays.structures.push({ at: [f.x, f.y], size: isLarge ? 5 : 3, shape: 'hub' });
+                            break;
+                        }
+                        case 'defense': {
+                            localEnemyOverlays.structures.push({ at: [f.x, f.y], size: isLarge ? 4 : 3, shape: 'fort' });
+                            break;
+                        }
+                        case 'government': {
+                            localEnemyOverlays.structures.push({ at: [f.x, f.y], size: isLarge ? 4 : 3, shape: 'hub' });
+                            break;
+                        }
+                        case 'conflict': {
+                            localEnemyOverlays.regions.push({ center: [f.x, f.y], radius: isLarge ? 12 : 9, char: 'x' });
+                            break;
+                        }
+                        case 'breakthrough': {
+                            localEnemyOverlays.regions.push({ center: [f.x, f.y], radius: isLarge ? 10 : 8, char: '*' });
+                            break;
+                        }
+                        default: {
+                            localEnemyOverlays.regions.push({ center: [f.x, f.y], radius: isLarge ? 10 : 7, char: '.' });
+                        }
+                    }
+                }
+                renderMergedEnemyOverlays(null);
+                updateEnemyFieldCanvas();
+                renderEnemyAsciiCanvasMerged();
+            }
+
+            // 生成本地场域 ASCII 画布
+            function generateLocalFieldCanvas(cols = FIELD_CANVAS_COLS, rows = FIELD_CANVAS_ROWS) {
+                const features = civilization.settlements || [];
+                const grid = new Array(rows);
+                for (let j = 0; j < rows; j++) {
+                    let rowChars = '';
+                    const y = (j + 0.5) / rows * 100;
+                    for (let i = 0; i < cols; i++) {
+                        const x = (i + 0.5) / cols * 100;
+                        let chInt = {
+                            settlement: 0,
+                            technology: 0,
+                            defense: 0,
+                            government: 0,
+                            conflict: 0,
+                            breakthrough: 0
+                        };
+                        for (const f of features) {
+                            // 仅用于渲染的微漂移，不改变真实数据
+                            const seed = (f.id % 1000) / 1000;
+                            const ampX = DRIFT_AMPLITUDE * (0.6 + seed * 0.8) * (f.isLarge ? 1.2 : 1.0);
+                            const ampY = DRIFT_AMPLITUDE * (0.6 + (1 - seed) * 0.8) * (f.isLarge ? 1.2 : 1.0);
+                            const fx = f.x + Math.sin(visualPhase * 1.3 + seed * 6.283) * ampX;
+                            const fy = f.y + Math.cos(visualPhase * 1.1 + seed * 6.283) * ampY;
+                            const dx = x - fx;
+                            const dy = y - fy;
+                            const d2 = dx*dx + dy*dy;
+                            const type = (f.type in FIELD_SIGMA) ? f.type : 'settlement';
+                            const sigma = (FIELD_SIGMA[type] || 9) * (f.isLarge ? 1.2 : 1.0);
+                            const val = Math.exp(-d2 / (2 * sigma * sigma));
+                            chInt[type] += val;
+                        }
+                        // 轻微的时空闪烁，增加持续演化感
+                        const shimmer = 1 + 0.08 * Math.sin(visualPhase * 4 + i * 0.21 + j * 0.37);
+                        for (const k in chInt) { chInt[k] *= shimmer; }
+                        // 选取主导通道
+                        let maxType = 'settlement';
+                        let maxVal = -1;
+                        for (const k in chInt) {
+                            if (chInt[k] > maxVal) { maxVal = chInt[k]; maxType = k; }
+                        }
+                        // 阈值: 过低则留空
+                        if (maxVal < 0.12) {
+                            rowChars += ' ';
+                        } else {
+                            const cs = FIELD_CHARSETS[maxType] || [' ', '.', '+', '#'];
+                            const level = Math.max(0, Math.min(3, Math.floor(maxVal * 3.5)));
+                            rowChars += cs[level];
+                        }
+                    }
+                    grid[j] = rowChars;
+                }
+                return { grid };
+            }
+
+            function updateFieldCanvas() {
+                if (!fieldCanvasEnabled) { localFieldCanvas = null; return; }
+                localFieldCanvas = generateLocalFieldCanvas();
+            }
+
+            function generateLocalEnemyFieldCanvas(cols = FIELD_CANVAS_COLS, rows = FIELD_CANVAS_ROWS) {
+                const features = enemy.settlements || [];
+                const grid = new Array(rows);
+                for (let j = 0; j < rows; j++) {
+                    let rowChars = '';
+                    const y = (j + 0.5) / rows * 100;
+                    for (let i = 0; i < cols; i++) {
+                        const x = (i + 0.5) / cols * 100;
+                        let chInt = { settlement: 0, technology: 0, defense: 0, government: 0, conflict: 0, breakthrough: 0 };
+                        for (const f of features) {
+                            const seed = (f.id % 1000) / 1000;
+                            const ampX = DRIFT_AMPLITUDE * (0.6 + seed * 0.8) * (f.isLarge ? 1.2 : 1.0);
+                            const ampY = DRIFT_AMPLITUDE * (0.6 + (1 - seed) * 0.8) * (f.isLarge ? 1.2 : 1.0);
+                            const fx = f.x + Math.sin(visualPhase * 1.25 + seed * 6.283) * ampX;
+                            const fy = f.y + Math.cos(visualPhase * 1.18 + seed * 6.283) * ampY;
+                            const dx = x - fx;
+                            const dy = y - fy;
+                            const d2 = dx*dx + dy*dy;
+                            const type = (f.type in FIELD_SIGMA) ? f.type : 'settlement';
+                            const sigma = (FIELD_SIGMA[type] || 9) * (f.isLarge ? 1.2 : 1.0);
+                            const val = Math.exp(-d2 / (2 * sigma * sigma));
+                            chInt[type] += val;
+                        }
+                        const shimmer = 1 + 0.08 * Math.cos(visualPhase * 4.3 + i * 0.19 + j * 0.41);
+                        for (const k in chInt) { chInt[k] *= shimmer; }
+                        let maxType = 'settlement';
+                        let maxVal = -1;
+                        for (const k in chInt) { if (chInt[k] > maxVal) { maxVal = chInt[k]; maxType = k; } }
+                        if (maxVal < 0.12) { rowChars += ' '; }
+                        else {
+                            const cs = FIELD_CHARSETS[maxType] || [' ', '.', '+', '#'];
+                            const level = Math.max(0, Math.min(3, Math.floor(maxVal * 3.5)));
+                            rowChars += cs[level];
+                        }
+                    }
+                    grid[j] = rowChars;
+                }
+                return { grid };
+            }
+
+            function updateEnemyFieldCanvas() {
+                if (!fieldCanvasEnabled) { localEnemyFieldCanvas = null; return; }
+                localEnemyFieldCanvas = generateLocalEnemyFieldCanvas();
+            }
+
+            // 合并 AI 与本地场域画布并渲染
+            function renderAsciiCanvasMerged() {
+                const canvas = document.getElementById('ascii-canvas');
+                if (!canvas) return;
+                if (!localFieldCanvas && fieldCanvasEnabled) updateFieldCanvas();
+                const aiGrid = (lastAIOverlays && lastAIOverlays.canvas && Array.isArray(lastAIOverlays.canvas.grid))
+                    ? lastAIOverlays.canvas.grid
+                    : null;
+                const localGrid = localFieldCanvas ? localFieldCanvas.grid : null;
+                let output = [];
+                if (localGrid && aiGrid) {
+                    const rows = Math.min(localGrid.length, aiGrid.length);
+                    for (let j = 0; j < rows; j++) {
+                        const a = typeof aiGrid[j] === 'string' ? aiGrid[j] : '';
+                        const b = localGrid[j] || '';
+                        const cols = Math.min(a.length, b.length);
+                        let merged = '';
+                        for (let i = 0; i < cols; i++) {
+                            const ca = a[i];
+                            const cb = b[i];
+                            merged += (ca && ca !== ' ') ? ca : cb;
+                        }
+                        output.push(merged);
+                    }
+                } else if (aiGrid) {
+                    output = aiGrid.slice(0, FIELD_CANVAS_ROWS).map(r => (typeof r === 'string' ? r : ''));
+                } else if (localGrid) {
+                    output = localGrid;
+                } else {
+                    output = [];
+                }
+                canvas.textContent = output.slice(0, FIELD_CANVAS_ROWS).join('\n');
+            }
+
+            function renderEnemyAsciiCanvasMerged() {
+                const canvas = document.getElementById('ascii-canvas-enemy');
+                if (!canvas) return;
+                if (!localEnemyFieldCanvas && fieldCanvasEnabled) updateEnemyFieldCanvas();
+                const aiGrid = (lastAIEnemyOverlays && lastAIEnemyOverlays.canvas && Array.isArray(lastAIEnemyOverlays.canvas.grid))
+                    ? lastAIEnemyOverlays.canvas.grid
+                    : null;
+                const localGrid = localEnemyFieldCanvas ? localEnemyFieldCanvas.grid : null;
+                let output = [];
+                if (localGrid && aiGrid) {
+                    const rows = Math.min(localGrid.length, aiGrid.length);
+                    for (let j = 0; j < rows; j++) {
+                        const a = typeof aiGrid[j] === 'string' ? aiGrid[j] : '';
+                        const b = localGrid[j] || '';
+                        const cols = Math.min(a.length, b.length);
+                        let merged = '';
+                        for (let i = 0; i < cols; i++) {
+                            const ca = a[i];
+                            const cb = b[i];
+                            merged += (ca && ca !== ' ') ? ca : cb;
+                        }
+                        output.push(merged);
+                    }
+                } else if (aiGrid) {
+                    output = aiGrid.slice(0, FIELD_CANVAS_ROWS).map(r => (typeof r === 'string' ? r : ''));
+                } else if (localGrid) {
+                    output = localGrid;
+                } else { output = []; }
+                canvas.textContent = output.slice(0, FIELD_CANVAS_ROWS).join('\n');
+            }
+
+            function updateAIMood(score) {
+                const face = score > 70 ? ':)' : score < 30 ? ':(' : ':|';
+                const label = score > 70 ? '乐观' : score < 30 ? '谨慎' : '平稳';
+                const total = 14; // 进度格数
+                const filled = Math.round((score / 100) * total);
+                const bar = `[${'#'.repeat(filled)}${'.'.repeat(total - filled)}] ${Math.round(score)}%`;
+                const faceEl = document.getElementById('ai-mood-face');
+                const labelEl = document.getElementById('ai-mood-label');
+                const barEl = document.getElementById('ai-mood-bar');
+                if (faceEl) faceEl.textContent = face;
+                if (labelEl) labelEl.textContent = label;
+                if (barEl) barEl.textContent = bar;
+            }
+
+            async function triggerAI() {
+                if (aiPending) return;
+                aiPending = true;
+                document.getElementById('ai-status').classList.remove('hidden');
+                try {
+                    const lastEvents = civilization.events.slice(-10);
+                    const payload = { state: {
+                        day, year, totalDays,
+                        population: civilization.population,
+                        technology: civilization.technology,
+                        stability: civilization.stability,
+                        resources: civilization.resources,
+                        environment: civilization.environment,
+                        economy: civilization.economy,
+                        culture: civilization.culture,
+                        military: civilization.military,
+                        happiness: civilization.happiness,
+                        diplomacy: civilization.diplomacy,
+                        isDeclining: civilization.isDeclining,
+                        stage: civilization.stage
+                    }, lastEvents, promptOverrides: { mode, guidelines } };
+                    const resp = await fetch(EVOLVE_ENDPOINT, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const data = await resp.json();
+                    applyAIDelta(data);
+                    updateUI();
+                } catch (e) {
+                    addNarrativeEvent('negative', `AI演化请求失败: ${e.message || e}`);
+                } finally {
+                    aiPending = false;
+                    document.getElementById('ai-status').classList.add('hidden');
+                }
+            }
+            
+            // 更新文明阶段
+            function updateCivilizationStage() {
+                // 确定当前阶段
+                let newStage = 0;
+                for (let i = 0; i < civilizationStages.length; i++) {
+                    if (civilization.technology >= civilizationStages[i].minTech && 
+                        civilization.technology < civilizationStages[i].maxTech) {
+                        newStage = i;
+                        break;
+                    } else if (civilization.technology >= 100) {
+                        newStage = civilizationStages.length - 1;
+                        break;
+                    }
+                }
+                
+                // 如果阶段变化，记录事件
+                if (newStage !== civilization.stage) {
+                    civilization.stage = newStage;
+                    addEvent('positive', `文明进入了${civilizationStages[newStage].name}`);
+                    
+                    // 改变进度条颜色
+                    if (civilizationStageEl) {
+                        civilizationStageEl.style.backgroundColor = civilizationStages[newStage].color;
+                    }
+                }
+                
+                // 更新进度条（若存在 DOM 元素）
+                let stageProgress = 0;
+                if (civilization.technology < 20) {
+                    stageProgress = civilization.technology / 20 * 20;
+                } else if (civilization.technology < 40) {
+                    stageProgress = 20 + (civilization.technology - 20) / 20 * 20;
+                } else if (civilization.technology < 60) {
+                    stageProgress = 40 + (civilization.technology - 40) / 20 * 20;
+                } else if (civilization.technology < 80) {
+                    stageProgress = 60 + (civilization.technology - 60) / 20 * 20;
+                } else if (civilization.technology < 100) {
+                    stageProgress = 80 + (civilization.technology - 80) / 20 * 20;
+                } else {
+                    stageProgress = 100;
+                }
+                
+                if (civilizationStageEl) {
+                    civilizationStageEl.style.width = `${stageProgress}%`;
+                }
+            }
+
+            // ASCII 风格阶段条
+            function updateAsciiStageBar() {
+                const totalBlocks = 30;
+                const percent = Math.min(100, Math.max(0, civilization.technology));
+                const filled = Math.round((percent / 100) * totalBlocks);
+                const bar = `[${'#'.repeat(filled)}${'.'.repeat(totalBlocks - filled)}] ${Math.round(percent)}%`;
+                const label = ['原','农','工','信','空'][civilization.stage] || '';
+                const el = document.getElementById('ascii-stage-bar');
+                if (el) el.textContent = `${bar} <${label}>`;
+            }
+            
+            // 更新生命周期进度
+            function updateLifespanProgress() {
+                const percentage = Math.min(100, (totalDays / civilization.lifespan) * 100);
+                lifespanPercentage.textContent = `${Math.round(percentage)}%`;
+                const totalBlocks = 30;
+                const filled = Math.round((percentage / 100) * totalBlocks);
+                const bar = `[${'#'.repeat(filled)}${'.'.repeat(totalBlocks - filled)}] ${Math.round(percentage)}%`;
+                const el = document.getElementById('lifespan-ascii');
+                if (el) el.textContent = bar;
+                
+                // 确定生命周期阶段
+                let currentStage = '';
+                for (let stage of lifeStages) {
+                    if (percentage / 100 >= stage.range[0] && percentage / 100 < stage.range[1]) {
+                        currentStage = stage.name;
+                        break;
+                    }
+                }
+                lifeStageEl.textContent = `当前阶段: ${currentStage}`;
+                
+                // 检查是否进入衰退期
+                if (percentage > 70 && !civilization.isDeclining) {
+                    civilization.isDeclining = true;
+                    addEvent('negative', '文明开始显示衰退迹象');
+                }
+                
+                // 检查文明是否终结
+                if (percentage >= 100) {
+                    addEvent('negative', '文明走到了历史的尽头');
+                    pauseSimulation();
+                    
+                    // 添加一个终结符号
+                    addSymbol('conflict', 50, 50, true);
+                }
+            }
+            
+            // 添加文明符号
+            function addSymbol(type, x, y, isLarge = false) {
+                // 仅记录抽象特征，后续用覆盖层渲染大范围符号
+                const symbolType = symbolTypes.find(st => st.type === type);
+                if (!symbolType) return;
+                civilization.settlements.push({
+                    id: Date.now(),
+                    type,
+                    x,
+                    y,
+                    isLarge: !!isLarge,
+                    age: 0
+                });
+                rebuildLocalOverlays();
+            }
+
+            function addEnemySymbol(type, x, y, isLarge = false) {
+                const symbolType = symbolTypes.find(st => st.type === type);
+                if (!symbolType) return;
+                enemy.settlements.push({
+                    id: Date.now() + Math.floor(Math.random()*1000),
+                    type,
+                    x,
+                    y,
+                    isLarge: !!isLarge,
+                    age: 0
+                });
+                rebuildEnemyLocalOverlays();
+            }
+            
+            // 随机添加符号
+            function addRandomSymbol() {
+                // 随机选择符号类型
+                let random = Math.random() * 100;
+                let selectedType = null;
+                
+                for (let type of symbolTypes) {
+                    random -= type.chance;
+                    if (random <= 0) {
+                        selectedType = type.type;
+                        break;
+                    }
+                }
+                
+                // 随机位置
+                const x = Math.random() * 80 + 10; // 10-90%
+                const y = Math.random() * 80 + 10; // 10-90%
+                
+                // 添加符号
+                addSymbol(selectedType, x, y);
+            }
+            
+            // 更新符号状态
+            function updateSymbols() {
+                // 随机移除一些旧特征
+                if (civilization.settlements.length > 50 && Math.random() < 0.1) {
+                    let oldest = null;
+                    for (const s of civilization.settlements) {
+                        if (!oldest || s.age > oldest.age) oldest = s;
+                    }
+                    if (oldest) {
+                        civilization.settlements = civilization.settlements.filter(s => s.id !== oldest.id);
+                    }
+                }
+                // 年龄递增
+                civilization.settlements.forEach(s => { s.age++; });
+                // 重建抽象覆盖层
+                rebuildLocalOverlays();
+            }
+
+            function updateEnemySymbols() {
+                if (enemy.settlements.length > 50 && Math.random() < 0.1) {
+                    let oldest = null;
+                    for (const s of enemy.settlements) { if (!oldest || s.age > oldest.age) oldest = s; }
+                    if (oldest) enemy.settlements = enemy.settlements.filter(s => s.id !== oldest.id);
+                }
+                enemy.settlements.forEach(s => { s.age++; });
+                rebuildEnemyLocalOverlays();
+            }
+            
+            // 添加事件
+            function addEvent(eventType, customMessage = null) {
+                // 查找事件类型
+                const eventGroup = eventTypes.find(et => et.type === eventType);
+                if (!eventGroup) return;
+                
+                // 选择消息
+                const message = customMessage || eventGroup.messages[Math.floor(Math.random() * eventGroup.messages.length)];
+                
+                // 应用事件效果
+                civilization.population = Math.max(1, civilization.population + (eventGroup.effects.population || 0));
+                civilization.technology = Math.max(0, Math.min(100, civilization.technology + (eventGroup.effects.technology || 0)));
+                civilization.stability = Math.max(0, Math.min(100, civilization.stability + (eventGroup.effects.stability || 0)));
+                
+                // 创建事件元素
+                const eventEl = document.createElement('pre');
+                eventEl.className = 'font-mono text-xs p-2 rounded-lg bg-gray-800/60 text-gray-300 whitespace-pre-wrap';
+                const prefix = eventType === 'positive' ? '[+]' : eventType === 'negative' ? '[-]' : '[*]';
+                eventEl.textContent = `${prefix} ${year}年${day}天 | ${message}`;
+                
+                // 添加到日志顶部
+                if (eventLogEl.firstChild) {
+                    eventLogEl.insertBefore(eventEl, eventLogEl.firstChild);
+                } else {
+                    eventLogEl.appendChild(eventEl);
+                }
+                
+                // 自动滚动到顶部
+                eventLogEl.scrollTop = 0;
+                
+                // 记录事件
+                civilization.events.push({
+                    day: totalDays,
+                    type: eventType,
+                    message
+                });
+                
+                // 更新最后事件日期
+                civilization.lastEventDay = totalDays;
+            }
+            
+            // 随机事件
+            function randomEvent() {
+                // 每7-14天发生一个事件
+                const daysSinceLastEvent = totalDays - civilization.lastEventDay;
+                if (daysSinceLastEvent < 7 || Math.random() > 1 / (14 - daysSinceLastEvent)) {
+                    return;
+                }
+                
+                // 基于文明稳定性调整事件概率
+                let eventChance = { positive: 0.3, negative: 0.3, neutral: 0.4 };
+                // 模式加权
+                if (mode === 'peace') {
+                    eventChance.positive += 0.15;
+                    eventChance.negative -= 0.15;
+                } else if (mode === 'disaster') {
+                    eventChance.positive -= 0.15;
+                    eventChance.negative += 0.15;
+                }
+                
+                // 稳定性高时更可能发生积极事件
+                if (civilization.stability > 70) {
+                    eventChance.positive += 0.2;
+                    eventChance.negative -= 0.2;
+                } 
+                // 稳定性低时更可能发生消极事件
+                else if (civilization.stability < 30) {
+                    eventChance.positive -= 0.2;
+                    eventChance.negative += 0.2;
+                }
+                
+                // 衰退期更可能发生消极事件
+                if (civilization.isDeclining) {
+                    eventChance.positive -= 0.1;
+                    eventChance.negative += 0.1;
+                }
+                
+                // 确保概率不为负
+                eventChance.positive = Math.max(0, eventChance.positive);
+                eventChance.negative = Math.max(0, eventChance.negative);
+                eventChance.neutral = 1 - eventChance.positive - eventChance.negative;
+                
+                // 随机选择事件类型
+                let random = Math.random();
+                let eventType;
+                
+                if (random < eventChance.positive) {
+                    eventType = 'positive';
+                } else if (random < eventChance.positive + eventChance.negative) {
+                    eventType = 'negative';
+                } else {
+                    eventType = 'neutral';
+                }
+                
+                // 添加事件
+                addEvent(eventType);
+            }
+            
+            // 模拟一天的变化
+            function simulateDay() {
+                // 更新时间
+                day++;
+                totalDays++;
+                if (day >= 365) {
+                    day = 0;
+                    year++;
+                }
+                
+                // 移除本地自然演化，交由云端权威
+                
+                // 随机添加符号
+                if (Math.random() < 0.1 && civilization.settlements.length < 100) {
+                    addRandomSymbol();
+                }
+                // 敌方随机成长
+                if (Math.random() < 0.08 && enemy.settlements.length < 100) {
+                    const x = Math.random() * 80 + 10;
+                    const y = Math.random() * 80 + 10;
+                    const types = ['settlement','technology','defense','government','conflict'];
+                    addEnemySymbol(types[Math.floor(Math.random()*types.length)], x, y);
+                }
+                
+                // 更新符号状态
+                updateSymbols();
+                updateEnemySymbols();
+                
+                // 随机事件
+                randomEvent();
+                // 本地触发 AI（异步）
+                if (aiEnabled && (totalDays % aiFrequency === 0)) {
+                    setTimeout(() => { triggerAI(); }, 0);
+                }
+                
+                // 更新UI（只读渲染依旧）
+                updateUI();
+            }
+            
+            // 开始模拟
+            function startSimulation() {
+                if (isRunning) return;
+                
+                isRunning = true;
+                startBtn.classList.add('hidden');
+                pauseBtn.classList.remove('hidden');
+                
+                // 根据速度设置间隔 (1x = 1秒 = 1天)
+                const intervalTime = 1000 / simulationSpeed;
+                
+                simulationInterval = setInterval(simulateDay, intervalTime);
+            }
+            
+            // 暂停模拟
+            function pauseSimulation() {
+                if (!isRunning) return;
+                
+                isRunning = false;
+                clearInterval(simulationInterval);
+                startBtn.classList.remove('hidden');
+                pauseBtn.classList.add('hidden');
+            }
+            
+            // 切换模拟速度
+            function toggleSpeed() {
+                const speeds = [1, 2, 4, 8];
+                const speedLabels = ['1x 速度', '2x 速度', '4x 速度', '8x 速度'];
+                
+                // 找到当前速度索引
+                let currentIndex = speeds.indexOf(simulationSpeed);
+                
+                // 切换到下一个速度
+                currentIndex = (currentIndex + 1) % speeds.length;
+                simulationSpeed = speeds[currentIndex];
+                speedText.textContent = speedLabels[currentIndex];
+                
+                // 如果正在运行，重新启动间隔以应用新速度
+                if (isRunning) {
+                    clearInterval(simulationInterval);
+                    const intervalTime = 1000 / simulationSpeed;
+                    simulationInterval = setInterval(simulateDay, intervalTime);
+                }
+            }
+
+            // 切换AI
+            function toggleAI() {
+                aiEnabled = !aiEnabled;
+                const aiText = document.getElementById('ai-toggle-text');
+                aiText.textContent = aiEnabled ? 'AI演化 开启' : 'AI演化 关闭';
+                const btn = document.getElementById('ai-toggle-btn');
+                if (aiEnabled) {
+                    btn.classList.remove('bg-gray-700');
+                    btn.classList.add('bg-success/20');
+                } else {
+                    btn.classList.add('bg-gray-700');
+                }
+            }
+            
+            // 格式化大数字
+            function formatNumber(num) {
+                if (num >= 1000000) {
+                    return (num / 1000000).toFixed(1) + 'M';
+                } else if (num >= 1000) {
+                    return (num / 1000).toFixed(1) + 'K';
+                }
+                return Math.round(num).toString();
+            }
+            
+            // 显示关于模态框
+            function showAboutModal() {
+                aboutModal.classList.remove('hidden');
+                // 添加动画效果
+                const modalContent = aboutModal.querySelector('div');
+                modalContent.classList.add('scale-100');
+                modalContent.classList.remove('scale-95', 'opacity-0');
+            }
+            
+            // 隐藏关于模态框
+            function hideAboutModal() {
+                aboutModal.classList.add('hidden');
+            }
+            
+            // 切换移动菜单
+            function toggleMobileMenu() {
+                mobileMenu.classList.toggle('hidden');
+            }
+            
+            // 移除远程订阅（后台取消）
+
+            // 事件监听器
+            startBtn.addEventListener('click', startSimulation);
+            pauseBtn.addEventListener('click', pauseSimulation);
+            speedBtn.addEventListener('click', toggleSpeed);
+            document.getElementById('ai-toggle-btn').addEventListener('click', toggleAI);
+            document.getElementById('ai-frequency').addEventListener('change', (e) => {
+                aiFrequency = parseInt(e.target.value || '3', 10);
+            });
+            document.getElementById('ai-trigger-btn').addEventListener('click', () => { triggerAI(); });
+            document.getElementById('mode-select').addEventListener('change', (e) => {
+                mode = e.target.value;
+                addNarrativeEvent('neutral', `模式切换为：${mode === 'peace' ? '和平' : mode === 'disaster' ? '灾变' : '标准'}`);
+            });
+            document.getElementById('autosave-toggle').addEventListener('change', (e) => {
+                autosaveEnabled = !!e.target.checked;
+                if (autosaveEnabled) saveSnapshot();
+            });
+            document.getElementById('guidelines-input').addEventListener('input', (e) => {
+                guidelines = e.target.value || '';
+                if (autosaveEnabled) saveSnapshot();
+            });
+            resetBtn.addEventListener('click', () => {
+                pauseSimulation();
+                initialize();
+            });
+            mobileResetBtn.addEventListener('click', () => {
+                toggleMobileMenu();
+                pauseSimulation();
+                initialize();
+            });
+            aboutBtn.addEventListener('click', showAboutModal);
+            mobileAboutBtn.addEventListener('click', () => {
+                toggleMobileMenu();
+                showAboutModal();
+            });
+            closeAboutBtn.addEventListener('click', hideAboutModal);
+            startFromAboutBtn.addEventListener('click', () => {
+                hideAboutModal();
+                startSimulation();
+            });
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            
+            // 点击模态框外部关闭
+            aboutModal.addEventListener('click', (e) => {
+                if (e.target === aboutModal) {
+                    hideAboutModal();
+                }
+            });
+            
+            // 存档/读档
+            function saveSnapshot() {
+                try {
+                    const snapshot = {
+                        civilization,
+                        day, year, totalDays,
+                        aiEnabled, aiFrequency, mode, guidelines, autosaveEnabled
+                    };
+                    localStorage.setItem('ai-civ-sim', JSON.stringify(snapshot));
+                } catch {}
+            }
+            function loadSnapshot() {
+                try {
+                    const raw = localStorage.getItem('ai-civ-sim');
+                    if (!raw) return false;
+                    const snap = JSON.parse(raw);
+                    if (!snap || !snap.civilization) return false;
+                    civilization = snap.civilization;
+                    day = snap.day || 0; year = snap.year || 0; totalDays = snap.totalDays || 0;
+                    aiEnabled = !!snap.aiEnabled;
+                    aiFrequency = snap.aiFrequency || 3;
+                    mode = snap.mode || 'normal';
+                    guidelines = snap.guidelines || '';
+                    autosaveEnabled = snap.autosaveEnabled !== false;
+                    // 同步控件
+                    document.getElementById('ai-toggle-text').textContent = aiEnabled ? 'AI演化 开启' : 'AI演化 关闭';
+                    document.getElementById('ai-frequency').value = String(aiFrequency);
+                    document.getElementById('mode-select').value = mode;
+                    document.getElementById('guidelines-input').value = guidelines;
+                    document.getElementById('autosave-toggle').checked = autosaveEnabled;
+                    updateUI();
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+
+            // 初始化模拟（先尝试读档）
+            if (!loadSnapshot()) {
+                initialize();
+            } else {
+                // 隐藏加载状态（读档无需加载遮罩）
+                loadingOverlay.classList.add('hidden');
+            }
+            // 确保视觉循环已启动
+            startVisualLoop();
+
+            // 预初始化网格，便于逐行更新
+            function ensureFieldGrids() {
+                if (!localFieldCanvas || !Array.isArray(localFieldCanvas.grid) || localFieldCanvas.grid.length !== FIELD_CANVAS_ROWS) {
+                    localFieldCanvas = { grid: new Array(FIELD_CANVAS_ROWS).fill('').map(() => ' '.repeat(FIELD_CANVAS_COLS)) };
+                }
+                if (!localEnemyFieldCanvas || !Array.isArray(localEnemyFieldCanvas.grid) || localEnemyFieldCanvas.grid.length !== FIELD_CANVAS_ROWS) {
+                    localEnemyFieldCanvas = { grid: new Array(FIELD_CANVAS_ROWS).fill('').map(() => ' '.repeat(FIELD_CANVAS_COLS)) };
+                }
+                if (!Array.isArray(localInfluenceGrid) || localInfluenceGrid.length !== FIELD_CANVAS_ROWS) {
+                    localInfluenceGrid = new Array(FIELD_CANVAS_ROWS).fill(null);
+                }
+                if (!Array.isArray(enemyInfluenceGrid) || enemyInfluenceGrid.length !== FIELD_CANVAS_ROWS) {
+                    enemyInfluenceGrid = new Array(FIELD_CANVAS_ROWS).fill(null);
+                }
+            }
+
+            function computeFieldRow(features, j, cols, rows, isEnemy) {
+                const y = (j + 0.5) / rows * 100;
+                let rowChars = '';
+                const strengths = new Float32Array(cols);
+                for (let i = 0; i < cols; i++) {
+                    const x = (i + 0.5) / cols * 100;
+                    let chInt = { settlement: 0, technology: 0, defense: 0, government: 0, conflict: 0, breakthrough: 0 };
+                    for (const f of features) {
+                        const seed = (f.id % 1000) / 1000;
+                        const ampX = DRIFT_AMPLITUDE * (0.6 + seed * 0.8) * (f.isLarge ? 1.2 : 1.0);
+                        const ampY = DRIFT_AMPLITUDE * (0.6 + (1 - seed) * 0.8) * (f.isLarge ? 1.2 : 1.0);
+                        const fx = f.x + Math.sin(visualPhase * (isEnemy ? 1.25 : 1.3) + seed * 6.283) * ampX;
+                        const fy = f.y + Math.cos(visualPhase * (isEnemy ? 1.18 : 1.1) + seed * 6.283) * ampY;
+                        const dx = x - fx;
+                        const dy = y - fy;
+                        const d2 = dx*dx + dy*dy;
+                        const type = (f.type in FIELD_SIGMA) ? f.type : 'settlement';
+                        const sigma = (FIELD_SIGMA[type] || 9) * (f.isLarge ? 1.2 : 1.0);
+                        const val = Math.exp(-d2 / (2 * sigma * sigma));
+                        chInt[type] += val;
+                    }
+                    const shimmer = 1 + 0.08 * (isEnemy
+                        ? Math.cos(visualPhase * 4.3 + i * 0.19 + j * 0.41)
+                        : Math.sin(visualPhase * 4.0 + i * 0.21 + j * 0.37));
+                    for (const k in chInt) { chInt[k] *= shimmer; }
+                    let maxType = 'settlement'; let maxVal = -1;
+                    for (const k in chInt) { if (chInt[k] > maxVal) { maxVal = chInt[k]; maxType = k; } }
+                    strengths[i] = maxVal;
+                    if (maxVal < 0.12) { rowChars += ' '; }
+                    else {
+                        const cs = FIELD_CHARSETS[maxType] || [' ', '.', '+', '#'];
+                        const level = Math.max(0, Math.min(3, Math.floor(maxVal * 3.5)));
+                        rowChars += cs[level];
+                    }
+                }
+                return { rowChars, strengths };
+            }
+
+            function updateFieldCanvasStep() {
+                ensureFieldGrids();
+                const features = civilization.settlements || [];
+                for (let n = 0; n < ROWS_PER_FRAME; n++) {
+                    const j = rowCursorLocal % FIELD_CANVAS_ROWS;
+                    const res = computeFieldRow(features, j, FIELD_CANVAS_COLS, FIELD_CANVAS_ROWS, false);
+                    localFieldCanvas.grid[j] = res.rowChars;
+                    localInfluenceGrid[j] = res.strengths;
+                    rowCursorLocal++;
+                }
+            }
+
+            function updateEnemyFieldCanvasStep() {
+                ensureFieldGrids();
+                const features = enemy.settlements || [];
+                for (let n = 0; n < ROWS_PER_FRAME; n++) {
+                    const j = rowCursorEnemy % FIELD_CANVAS_ROWS;
+                    const res = computeFieldRow(features, j, FIELD_CANVAS_COLS, FIELD_CANVAS_ROWS, true);
+                    localEnemyFieldCanvas.grid[j] = res.rowChars;
+                    enemyInfluenceGrid[j] = res.strengths;
+                    rowCursorEnemy++;
+                }
+            }
+
+            // 持续视觉循环（requestAnimationFrame）
+            function startVisualLoop() {
+                if (rafId) { try { cancelAnimationFrame(rafId); } catch {} }
+                ensureFieldGrids();
+                const tick = () => {
+                    visualPhase += 0.06;
+                    updateFieldCanvasStep();
+                    updateEnemyFieldCanvasStep();
+                    frameParity ^= 1;
+                    if (frameParity === 0) {
+                        renderAsciiCanvasMerged();
+                        renderEnemyAsciiCanvasMerged();
+                    }
+                    rafId = requestAnimationFrame(tick);
+                };
+                rafId = requestAnimationFrame(tick);
+            }
+            function stopVisualLoop() {
+                if (rafId) { try { cancelAnimationFrame(rafId); } catch {} }
+                rafId = null;
+            }
+        });
+    </script>
 </body>
 </html>
-
-
