@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Civilization Simulator - Technical Whitepaper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .section-number {
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+        }
+        
+        .timeline-line {
+            background: linear-gradient(180deg, #000 0%, #666 50%, #000 100%);
+        }
+        
+        @media print {
+            .no-print { display: none; }
+            body { background: white; }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50 no-print">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-semibold text-sm tracking-tight">AI CIVILIZATION</div>
+            <a href="index.html" class="text-sm px-4 py-2 bg-black text-white hover:bg-gray-800 transition-colors">
+                Launch Simulator
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="pt-32 pb-20 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="mb-8">
+                <div class="text-sm text-gray-500 mb-2">TECHNICAL WHITEPAPER</div>
+                <h1 class="text-6xl font-light tracking-tight mb-6 leading-tight">
+                    AI Civilization<br/>Simulator
+                </h1>
+                <p class="text-xl text-gray-600 max-w-2xl font-light">
+                    A real-time simulation platform exploring the emergence and evolution 
+                    of artificial intelligence-driven civilizations
+                </p>
+            </div>
+            <div class="flex items-center gap-8 text-sm text-gray-500 pt-8 border-t border-gray-200">
+                <div>Version 1.0</div>
+                <div>December 2024</div>
+                <div>Open Source</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 pb-32">
+        
+        <!-- Abstract -->
+        <section class="mb-24">
+            <h2 class="text-sm font-semibold text-gray-900 mb-6 tracking-wide uppercase">Abstract</h2>
+            <div class="text-lg text-gray-700 leading-relaxed space-y-4 font-light">
+                <p>
+                    This paper presents a novel web-based platform for simulating the lifecycle of AI-driven civilizations. 
+                    Through autonomous decision-making algorithms and real-time state evolution, the system creates emergent 
+                    behaviors that mirror complex socio-economic dynamics.
+                </p>
+                <p>
+                    Our approach combines deterministic simulation mechanics with stochastic AI responses, enabling users 
+                    to observe and influence civilizations as they progress through distinct developmental stages—from 
+                    primitive societies to space-faring civilizations.
+                </p>
+            </div>
+        </section>
+
+        <!-- Problem Statement -->
+        <section class="mb-24">
+            <div class="flex items-baseline gap-4 mb-6">
+                <span class="section-number text-sm text-gray-400 font-mono">01</span>
+                <h2 class="text-3xl font-light tracking-tight">Problem Statement</h2>
+            </div>
+            <div class="pl-12">
+                <p class="text-gray-700 leading-relaxed mb-8 font-light">
+                    Existing civilization simulators rely on pre-programmed decision trees, limiting emergent complexity 
+                    and real-world applicability. Key limitations include:
+                </p>
+                <div class="space-y-6">
+                    <div class="border-l-2 border-gray-900 pl-6">
+                        <div class="font-medium mb-2">Deterministic Behavior Patterns</div>
+                        <div class="text-gray-600 text-sm">
+                            Fixed response algorithms produce predictable outcomes, reducing simulation value 
+                            for research and education
+                        </div>
+                    </div>
+                    <div class="border-l-2 border-gray-300 pl-6">
+                        <div class="font-medium mb-2">Limited User Agency</div>
+                        <div class="text-gray-600 text-sm">
+                            Minimal real-time interaction prevents meaningful exploration of alternative 
+                            developmental trajectories
+                        </div>
+                    </div>
+                    <div class="border-l-2 border-gray-300 pl-6">
+                        <div class="font-medium mb-2">Inadequate Visualization</div>
+                        <div class="text-gray-600 text-sm">
+                            Traditional graphical representations fail to convey multi-dimensional state changes 
+                            in intuitive ways
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Solution Architecture -->
+        <section class="mb-24">
+            <div class="flex items-baseline gap-4 mb-6">
+                <span class="section-number text-sm text-gray-400 font-mono">02</span>
+                <h2 class="text-3xl font-light tracking-tight">Solution Architecture</h2>
+            </div>
+            <div class="pl-12">
+                <div class="bg-gray-50 border border-gray-200 p-8 mb-8">
+                    <div class="grid grid-cols-3 gap-8 text-center">
+                        <div>
+                            <div class="text-3xl font-light mb-2">10s</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wide">Simulation Cycle</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-light mb-2">10+</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wide">Dynamic Metrics</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-light mb-2">2+</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wide">Competing Factions</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="text-sm font-semibold mb-4 tracking-wide uppercase">Core Components</h3>
+                <div class="space-y-4 mb-8">
+                    <div class="flex gap-4">
+                        <div class="w-2 h-2 bg-black rounded-full mt-2 flex-shrink-0"></div>
+                        <div>
+                            <div class="font-medium mb-1">Autonomous Decision Engine</div>
+                            <div class="text-sm text-gray-600">
+                                AI-powered evaluation system generating contextual responses based on 
+                                civilization state parameters
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-2 h-2 bg-black rounded-full mt-2 flex-shrink-0"></div>
+                        <div>
+                            <div class="font-medium mb-1">Real-Time State Management</div>
+                            <div class="text-sm text-gray-600">
+                                Event-driven architecture maintaining consistent state across 10+ concurrent metrics
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-2 h-2 bg-black rounded-full mt-2 flex-shrink-0"></div>
+                        <div>
+                            <div class="font-medium mb-1">Field-Based Visualization</div>
+                            <div class="text-sm text-gray-600">
+                                ASCII-rendered influence fields displaying territorial control and developmental patterns
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Implementation -->
+        <section class="mb-24">
+            <div class="flex items-baseline gap-4 mb-6">
+                <span class="section-number text-sm text-gray-400 font-mono">03</span>
+                <h2 class="text-3xl font-light tracking-tight">Technical Implementation</h2>
+            </div>
+            <div class="pl-12">
+                <div class="mb-12">
+                    <h3 class="text-sm font-semibold mb-4 tracking-wide uppercase">Frontend Stack</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="border border-gray-200 p-4">
+                            <div class="text-xs text-gray-500 mb-2 uppercase tracking-wide">Core</div>
+                            <div class="text-sm space-y-1">
+                                <div>HTML5 Canvas & SVG</div>
+                                <div>Vanilla JavaScript</div>
+                                <div>TailwindCSS</div>
+                                <div>requestAnimationFrame API</div>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 p-4">
+                            <div class="text-xs text-gray-500 mb-2 uppercase tracking-wide">Architecture</div>
+                            <div class="text-sm space-y-1">
+                                <div>Event-Driven State</div>
+                                <div>Modular Entity System</div>
+                                <div>Field Computation</div>
+                                <div>Metric Aggregation</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-12">
+                    <h3 class="text-sm font-semibold mb-4 tracking-wide uppercase">Backend Infrastructure</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="border border-gray-200 p-4">
+                            <div class="text-xs text-gray-500 mb-2 uppercase tracking-wide">Cloud Services</div>
+                            <div class="text-sm space-y-1">
+                                <div>Google Cloud Functions</div>
+                                <div>Firebase Firestore</div>
+                                <div>RESTful Endpoints</div>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 p-4">
+                            <div class="text-xs text-gray-500 mb-2 uppercase tracking-wide">AI Integration</div>
+                            <div class="text-sm space-y-1">
+                                <div>LLM Decision Engine</div>
+                                <div>Context-Aware Prompting</div>
+                                <div>Fallback Mock System</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-semibold mb-4 tracking-wide uppercase">Data Model</h3>
+                    <div class="bg-gray-50 border border-gray-200 p-6">
+                        <pre class="text-xs leading-relaxed text-gray-700 overflow-x-auto"><code>{
+  civilization: {
+    population: Number,
+    technology: Number(0-100),
+    stability: Number(0-100),
+    resources: Number(0-100),
+    environment: Number(0-100),
+    economy: Number(0-100),
+    culture: Number(0-100),
+    military: Number(0-100),
+    happiness: Number(0-100),
+    diplomacy: Number(0-100),
+    stage: Number(0-4),
+    lifespan: Number,
+    isDeclining: Boolean
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Features -->
+        <section class="mb-24">
+            <div class="flex items-baseline gap-4 mb-6">
+                <span class="section-number text-sm text-gray-400 font-mono">04</span>
+                <h2 class="text-3xl font-light tracking-tight">Core Features</h2>
+            </div>
+            <div class="pl-12">
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="font-medium mb-3">Multi-Dimensional Metrics</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Ten concurrent metrics track civilization health, enabling nuanced analysis of 
+                            developmental trajectories and decision impacts.
+                        </p>
+                        <div class="grid grid-cols-5 gap-2 text-xs">
+                            <div class="border border-gray-200 p-2 text-center">Population</div>
+                            <div class="border border-gray-200 p-2 text-center">Technology</div>
+                            <div class="border border-gray-200 p-2 text-center">Stability</div>
+                            <div class="border border-gray-200 p-2 text-center">Resources</div>
+                            <div class="border border-gray-200 p-2 text-center">Environment</div>
+                            <div class="border border-gray-200 p-2 text-center">Economy</div>
+                            <div class="border border-gray-200 p-2 text-center">Culture</div>
+                            <div class="border border-gray-200 p-2 text-center">Military</div>
+                            <div class="border border-gray-200 p-2 text-center">Happiness</div>
+                            <div class="border border-gray-200 p-2 text-center">Diplomacy</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="font-medium mb-3">Lifecycle Stages</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Civilizations progress through five distinct stages, each characterized by unique 
+                            challenges and opportunities.
+                        </p>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-4 text-sm">
+                                <div class="w-24 text-gray-500">0–10%</div>
+                                <div class="flex-1 h-1 bg-gray-200"></div>
+                                <div class="w-24">Birth</div>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm">
+                                <div class="w-24 text-gray-500">10–40%</div>
+                                <div class="flex-1 h-1 bg-gray-300"></div>
+                                <div class="w-24">Growth</div>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm">
+                                <div class="w-24 text-gray-500">40–70%</div>
+                                <div class="flex-1 h-1 bg-gray-400"></div>
+                                <div class="w-24">Prosperity</div>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm">
+                                <div class="w-24 text-gray-500">70–90%</div>
+                                <div class="flex-1 h-1 bg-gray-500"></div>
+                                <div class="w-24">Decline</div>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm">
+                                <div class="w-24 text-gray-500">90–100%</div>
+                                <div class="flex-1 h-1 bg-gray-900"></div>
+                                <div class="w-24">Terminal</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="font-medium mb-3">Event System</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Dynamic event generation creates narrative depth while influencing civilization metrics.
+                        </p>
+                        <div class="grid md:grid-cols-3 gap-4 text-xs">
+                            <div class="border border-gray-200 p-4">
+                                <div class="font-mono mb-2 text-green-600">+POSITIVE</div>
+                                <div class="text-gray-600">
+                                    Technological breakthroughs, diplomatic victories, resource discoveries
+                                </div>
+                            </div>
+                            <div class="border border-gray-200 p-4">
+                                <div class="font-mono mb-2 text-red-600">-NEGATIVE</div>
+                                <div class="text-gray-600">
+                                    Natural disasters, economic crises, social unrest
+                                </div>
+                            </div>
+                            <div class="border border-gray-200 p-4">
+                                <div class="font-mono mb-2 text-gray-600">~NEUTRAL</div>
+                                <div class="text-gray-600">
+                                    Cultural celebrations, minor reforms, explorations
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Development Roadmap -->
+        <section class="mb-24">
+            <div class="flex items-baseline gap-4 mb-6">
+                <span class="section-number text-sm text-gray-400 font-mono">05</span>
+                <h2 class="text-3xl font-light tracking-tight">Development Roadmap</h2>
+            </div>
+            <div class="pl-12">
+                <div class="space-y-6">
+                    <div class="border-l-2 border-black pl-6">
+                        <div class="flex items-baseline gap-4 mb-2">
+                            <span class="font-medium">Phase 1</span>
+                            <span class="text-xs text-gray-500 uppercase tracking-wide">Completed Q4 2024</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            Core simulation engine, UI implementation, state management, 
+                            ASCII visualization, mock AI integration
+                        </div>
+                    </div>
+                    
+                    <div class="border-l-2 border-gray-900 pl-6">
+                        <div class="flex items-baseline gap-4 mb-2">
+                            <span class="font-medium">Phase 2</span>
+                            <span class="text-xs text-gray-500 uppercase tracking-wide">In Progress Q1 2025</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            Advanced AI models, cloud optimization, multi-civilization battles, 
+                            enhanced visualization, user guideline system
+                        </div>
+                    </div>
+                    
+                    <div class="border-l-2 border-gray-400 pl-6">
+                        <div class="flex items-baseline gap-4 mb-2">
+                            <span class="font-medium">Phase 3</span>
+                            <span class="text-xs text-gray-500 uppercase tracking-wide">Planned Q2 2025</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            Multiplayer synchronization, leaderboard system, civilization sharing, 
+                            community events, achievements
+                        </div>
+                    </div>
+                    
+                    <div class="border-l-2 border-gray-300 pl-6">
+                        <div class="flex items-baseline gap-4 mb-2">
+                            <span class="font-medium">Phase 4</span>
+                            <span class="text-xs text-gray-500 uppercase tracking-wide">Planned Q3 2025</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            Advanced diplomacy, trade simulation, research trees, cultural mechanics, 
+                            climate modeling
+                        </div>
+                    </div>
+                    
+                    <div class="border-l-2 border-gray-200 pl-6">
+                        <div class="flex items-baseline gap-4 mb-2">
+                            <span class="font-medium">Phase 5</span>
+                            <span class="text-xs text-gray-500 uppercase tracking-wide">Future Q4 2025+</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            Mobile application, VR/AR integration, custom editor, AI marketplace, 
+                            educational partnerships
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Applications -->
+        <section class="mb-24">
+            <div class="flex items-baseline gap-4 mb-6">
+                <span class="section-number text-sm text-gray-400 font-mono">06</span>
+                <h2 class="text-3xl font-light tracking-tight">Applications</h2>
+            </div>
+            <div class="pl-12">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-medium mb-2">Educational Use</h3>
+                        <p class="text-sm text-gray-600">
+                            Teaching complex systems, historical processes, and policy impact analysis 
+                            in academic environments
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-medium mb-2">Research Platform</h3>
+                        <p class="text-sm text-gray-600">
+                            Studying AI behavior patterns, emergent phenomena, and adaptive systems 
+                            in controlled conditions
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-medium mb-2">Strategic Planning</h3>
+                        <p class="text-sm text-gray-600">
+                            Modeling long-term scenarios, testing policy decisions, and understanding 
+                            systemic interdependencies
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-medium mb-2">Entertainment</h3>
+                        <p class="text-sm text-gray-600">
+                            Engaging strategy gameplay for enthusiasts interested in civilization 
+                            management and competition
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusion -->
+        <section class="mb-24">
+            <div class="flex items-baseline gap-4 mb-6">
+                <span class="section-number text-sm text-gray-400 font-mono">07</span>
+                <h2 class="text-3xl font-light tracking-tight">Conclusion</h2>
+            </div>
+            <div class="pl-12">
+                <p class="text-gray-700 leading-relaxed mb-8 font-light">
+                    The AI Civilization Simulator demonstrates the viability of combining autonomous decision-making 
+                    with real-time simulation mechanics to create emergent complexity. By prioritizing user agency 
+                    and intuitive visualization, the platform serves as both an educational tool and research instrument.
+                </p>
+                <p class="text-gray-700 leading-relaxed mb-8 font-light">
+                    Future development will expand multi-agent interactions, enhance AI sophistication, and broaden 
+                    accessibility through cross-platform deployment. The open-source nature of the project invites 
+                    community contribution toward these objectives.
+                </p>
+                <div class="pt-8 border-t border-gray-200">
+                    <a href="index.html" class="inline-block px-6 py-3 bg-black text-white text-sm hover:bg-gray-800 transition-colors">
+                        Launch Simulator
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- References -->
+        <section class="mb-24 text-xs text-gray-500">
+            <div class="border-t border-gray-200 pt-8">
+                <div class="mb-2">Document Version 1.0</div>
+                <div class="mb-2">Last Updated: December 2024</div>
+                <div>License: Open Source / MIT</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href'))?.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
