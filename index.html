@@ -1962,7 +1962,7 @@
                     guidelines = snap.guidelines || '';
                     autosaveEnabled = snap.autosaveEnabled !== false;
                     // 同步控件
-                    document.getElementById('ai-toggle-text').textContent = aiEnabled ? 'AI演化 开启' : 'AI演化 关闭';
+                    document.getElementById('ai-toggle-text').textContent = aiEnabled ? 'AI Evolution ON' : 'AI Evolution OFF';
                     document.getElementById('ai-frequency').value = String(aiFrequency);
                     document.getElementById('mode-select').value = mode;
                     document.getElementById('guidelines-input').value = guidelines;
@@ -1988,7 +1988,7 @@
             try {
                 aiEnabled = true;
                 const aiText = document.getElementById('ai-toggle-text');
-                if (aiText) aiText.textContent = 'AI演化 开启';
+                if (aiText) aiText.textContent = 'AI Evolution ON';
                 const btn = document.getElementById('ai-toggle-btn');
                 if (btn) { btn.classList.remove('bg-gray-700'); btn.classList.add('bg-success/20'); }
                 startSimulation();
