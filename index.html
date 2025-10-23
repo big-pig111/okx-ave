@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI文明模拟器 - 文明的兴衰</title>
+    <title>AI Civilization Simulator - Rise and Fall</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='black'/%3E%3Ctext x='8' y='42' font-size='32' fill='%2322c55e' font-family='monospace'%3EAI%3C/text%3E%3C/svg%3E"/>
@@ -11,7 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script>
-        // Firebase Web 配置（已填入你的项目参数）
+        // Firebase Web Configuration
         window.__FIREBASE_CONFIG__ = window.__FIREBASE_CONFIG__ || {
             apiKey: "AIzaSyA5Z5ieEbAcfQX0kxGSn9ldGXhzvAwx_8M",
             authDomain: "chat-294cc.firebaseapp.com",
@@ -24,7 +24,7 @@
         };
     </script>
     
-    <!-- Tailwind配置 -->
+    <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
             theme: {
@@ -80,22 +80,22 @@
             .pip { position:absolute; left:10px; top:40px; width:220px; height:140px; background: rgba(0,0,0,0.55); border:1px solid rgba(34,197,94,0.4); box-shadow: 0 0 18px rgba(0,0,0,0.5); }
             .pip pre { font-size: 8px; line-height: 10px; padding:6px; color:#34d399; }
             .channel-title { position:absolute; top:8px; left:50%; transform:translateX(-50%); background: rgba(0,0,0,0.45); border:1px solid rgba(34,197,94,0.4); padding:3px 8px; font-size:12px; letter-spacing:1px; }
-            /* 弹幕关闭 */
+            /* Danmaku disabled */
         }
     </style>
 </head>
 <body class="bg-black text-green-300 min-h-screen flex flex-col font-mono">
-    <!-- 顶部导航栏 -->
+    <!-- Top Navigation Bar -->
     <header class="bg-black/90 border-b border-green-800 sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <span class="text-primary text-2xl">[CIV]</span>
-                <h1 class="text-xl md:text-2xl font-bold text-gray-200">文明模拟器</h1>
+                <h1 class="text-xl md:text-2xl font-bold text-gray-200">Civilization Simulator</h1>
             </div>
             
             <div class="hidden md:flex items-center space-x-6">
-                <button id="about-btn" class="hover:text-primary transition-colors duration-200 hidden">[ 关于 ]</button>
-                <button id="reset-btn" class="hover:text-primary transition-colors duration-200">[ 重置 ]</button>
+                <button id="about-btn" class="hover:text-primary transition-colors duration-200 hidden">[ About ]</button>
+                <button id="reset-btn" class="hover:text-primary transition-colors duration-200">[ Reset ]</button>
             </div>
             
             <div class="flex md:hidden">
@@ -103,92 +103,92 @@
             </div>
         </div>
         
-        <!-- 移动端菜单 -->
+        <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-black/95 border-t border-green-800">
             <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
-                <button id="mobile-about-btn" class="py-2 text-green-300 text-left hidden">[ 关于 ]</button>
-                <button id="mobile-reset-btn" class="py-2 text-green-300 text-left">[ 重置 ]</button>
+                <button id="mobile-about-btn" class="py-2 text-green-300 text-left hidden">[ About ]</button>
+                <button id="mobile-reset-btn" class="py-2 text-green-300 text-left">[ Reset ]</button>
             </div>
         </div>
     </header>
 
-    <!-- 主内容区 -->
+    <!-- Main Content Area -->
     <main class="flex-grow container mx-auto px-4 py-6 md:py-10">
-        <!-- 控制面板 -->
+        <!-- Control Panel -->
         <div class="bg-dark/50 border border-gray-800 p-4 mb-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="flex items-center space-x-4">
-                    <button id="start-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200">[ 开始 ]</button>
-                    <button id="pause-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden">[ 暂停 ]</button>
-                    <button id="speed-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden">[ <span id="speed-text">1x 速度</span> ]</button>
+                    <button id="start-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200">[ Start ]</button>
+                    <button id="pause-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden">[ Pause ]</button>
+                    <button id="speed-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden">[ <span id="speed-text">1x Speed</span> ]</button>
                 </div>
 
                 <div class="flex items-center space-x-3 w-full md:w-auto">
-                    <button id="ai-toggle-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-all duration-200">[ <span id="ai-toggle-text">AI演化 关闭</span> ]</button>
+                    <button id="ai-toggle-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-all duration-200">[ <span id="ai-toggle-text">AI Evolution OFF</span> ]</button>
                     <div class="flex items-center bg-dark/70 border border-gray-800 rounded-lg px-3 py-2">
-                        <span class="mr-2 text-gray-400">[频率]</span>
+                        <span class="mr-2 text-gray-400">[Freq]</span>
                         <select id="ai-frequency" class="bg-transparent text-sm outline-none">
-                            <option value="1">每1天</option>
-                            <option value="3" selected>每3天</option>
-                            <option value="7">每7天</option>
-                            <option value="14">每14天</option>
+                            <option value="1">Every 1 day</option>
+                            <option value="3" selected>Every 3 days</option>
+                            <option value="7">Every 7 days</option>
+                            <option value="14">Every 14 days</option>
                         </select>
                     </div>
                     <div class="flex items-center bg-dark/70 border border-gray-800 rounded-lg px-3 py-2">
-                        <span class="mr-2 text-gray-400">[模式]</span>
+                        <span class="mr-2 text-gray-400">[Mode]</span>
                         <select id="mode-select" class="bg-transparent text-sm outline-none">
-                            <option value="peace">和平</option>
-                            <option value="normal" selected>标准</option>
-                            <option value="disaster">灾变</option>
+                            <option value="peace">Peace</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="disaster">Disaster</option>
                         </select>
                     </div>
-                    <label class="flex items-center bg-dark/70 border border-gray-800 rounded-lg px-3 py-2 cursor-pointer select-none">[ 自动存档 ]<input id="autosave-toggle" type="checkbox" class="ml-2"></label>
-                    <button id="ai-trigger-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-all duration-200">[ 立即演化 ]</button>
-                    <div id="ai-status" class="text-xs text-gray-400 hidden">( 计算中 ... )</div>
+                    <label class="flex items-center bg-dark/70 border border-gray-800 rounded-lg px-3 py-2 cursor-pointer select-none">[ Auto-save ]<input id="autosave-toggle" type="checkbox" class="ml-2"></label>
+                    <button id="ai-trigger-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-all duration-200">[ Evolve Now ]</button>
+                    <div id="ai-status" class="text-xs text-gray-400 hidden">( Computing ... )</div>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full md:w-auto">
-                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌─ 模拟时间 ─┐
-│ <span id="simulation-time">0年0天</span>
-└──────────┘</pre>
-                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 人口 ──┐
+                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌─ Sim Time ─┐
+│ <span id="simulation-time">0Y 0D</span>
+└────────────┘</pre>
+                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌ Population ┐
 │ <span id="population">0</span>
-└────────┘</pre>
-                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌ 技术水平 ┐
+└────────────┘</pre>
+                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌ Technology ┐
 │ <span id="technology">0</span>
-└────────┘</pre>
-                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 稳定性 ─┐
+└────────────┘</pre>
+                    <pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌─ Stability ┐
 │ <span id="stability">0%</span>
-└──────────┘</pre>
+└─────────────┘</pre>
                 </div>
             </div>
         </div>
         
-        <!-- 文明阶段指示器 -->
+        <!-- Civilization Stage Indicator -->
         <div class="mb-6">
             <div class="flex justify-between text-xs text-gray-400 mb-1">
-                <span>原始社会</span>
-                <span>农业社会</span>
-                <span>工业革命</span>
-                <span>信息时代</span>
-                <span>太空时代</span>
+                <span>Primitive</span>
+                <span>Agricultural</span>
+                <span>Industrial</span>
+                <span>Information</span>
+                <span>Space Age</span>
             </div>
             <div id="ascii-stage-bar" class="font-mono text-xs text-green-400 mt-1"></div>
         </div>
         
-        <!-- 文明模拟区域 -->
+        <!-- Civilization Simulation Area -->
         <div class="relative bg-dark/50 border border-gray-800 p-4 md:p-6 mb-6 overflow-hidden">
             <div id="simulation-area" class="simulation-grid w-full aspect-[16/9] overflow-hidden relative">
-                <!-- 文明符号将在这里动态生成 -->
+                <!-- Civilization symbols will be dynamically generated here -->
                 <div id="civilization-symbols" class="w-full h-full"></div>
-                <!-- ASCII 覆盖层（路线/区域/标签/结构） -->
+                <!-- ASCII Overlay (routes/regions/labels/structures) -->
                 <div id="ascii-overlays" class="pointer-events-none absolute inset-0"></div>
-                <!-- ASCII 画布（整帧快照） -->
+                <!-- ASCII Canvas (full frame snapshot) -->
                 <pre id="ascii-canvas" class="absolute inset-0 m-0 p-2 text-[10px] leading-3 overflow-hidden whitespace-pre text-green-400 pointer-events-none"></pre>
-                <!-- 敌方 ASCII 覆盖层（红色） -->
+                <!-- Enemy ASCII Overlay (red) -->
                 <div id="ascii-overlays-enemy" class="pointer-events-none absolute inset-0"></div>
-                <!-- 敌方 ASCII 画布（整帧快照，红色） -->
+                <!-- Enemy ASCII Canvas (full frame snapshot, red) -->
                 <pre id="ascii-canvas-enemy" class="absolute inset-0 m-0 p-2 text-[10px] leading-3 overflow-hidden whitespace-pre text-red-400 pointer-events-none"></pre>
-                <!-- 阵营提示 -->
+                <!-- Faction Legend -->
                 <div class="pointer-events-none absolute right-2 bottom-2 bg-black/40 border border-gray-700 rounded px-2 py-1 text-[11px] leading-4">
                     <div><span class="text-green-400">■</span> chat-gpt5</div>
                     <div><span class="text-red-400">■</span> claude-4.1</div>
@@ -227,80 +227,80 @@
                     <div class="absolute inset-0 scanlines"></div>
                     <div class="absolute inset-0 vignette"></div>
                     <div class="pip"><pre id="pip-canvas"></pre></div>
-                    <!-- 弹幕已关闭 -->
+                    <!-- Danmaku disabled -->
                 </div>
                 
-                <!-- 加载覆盖层 -->
+                <!-- Loading Overlay -->
                 <div id="loading-overlay" class="absolute inset-0 bg-dark/80 flex flex-col items-center justify-center z-10">
                     <div class="text-4xl text-primary mb-4 animate-spin">◌</div>
-                    <p class="text-lg">文明初始化中...</p>
+                    <p class="text-lg">Initializing Civilization...</p>
                 </div>
             </div>
         </div>
         
-        <!-- 事件日志和统计信息 -->
+        <!-- Event Log and Statistics -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- 事件日志 -->
+            <!-- Event Log -->
             <div class="lg:col-span-2 bg-dark/50 border border-gray-800 p-4">
-                <h2 class="text-lg font-semibold mb-3 flex items-center">[ 文明大事记 ]</h2>
+                <h2 class="text-lg font-semibold mb-3 flex items-center">[ Civilization Chronicle ]</h2>
                 <div id="event-log" class="h-64 overflow-y-auto pr-2 text-sm space-y-2">
-                    <p class="text-gray-400 italic">模拟开始后将显示文明发展事件...</p>
+                    <p class="text-gray-400 italic">Civilization development events will appear after simulation starts...</p>
                 </div>
             </div>
             
-            <!-- AI 指南 + 指标与符号解释 -->
+            <!-- AI Guidelines + Indicators and Symbol Explanations -->
             <div class="bg-dark/50 border border-gray-800 p-4">
-                <h2 class="text-lg font-semibold mb-3 flex items-center">[ AI 指南（可选） ]</h2>
-                <textarea id="guidelines-input" class="w-full bg-dark/70 border border-gray-800 rounded-lg p-3 text-sm mb-4 outline-none" rows="3" placeholder="给 AI 的演化方向提示，例如：优先绿色发展，减少战争概率……"></textarea>
+                <h2 class="text-lg font-semibold mb-3 flex items-center">[ AI Guidelines (Optional) ]</h2>
+                <textarea id="guidelines-input" class="w-full bg-dark/70 border border-gray-800 rounded-lg p-3 text-sm mb-4 outline-none" rows="3" placeholder="Hints for AI evolution direction, e.g.: Prioritize green development, reduce war probability..."></textarea>
                 <div class="mb-4">
-<pre class="bg-black/60 rounded-lg p-3 border border-green-800 text-xs leading-5 whitespace-pre-wrap">┌── AI 心情 ──┐
-│ <span id="ai-mood-face">:|</span>  <span id="ai-mood-label">平稳</span>
+<pre class="bg-black/60 rounded-lg p-3 border border-green-800 text-xs leading-5 whitespace-pre-wrap">┌── AI Mood ──┐
+│ <span id="ai-mood-face">:|</span>  <span id="ai-mood-label">Stable</span>
 │ <span id="ai-mood-bar">[..............] 0%</span>
-└───────────┘</pre>
+└─────────────┘</pre>
                 </div>
-                <h2 class="text-lg font-semibold mb-3 flex items-center">[ 文明指标 ]</h2>
+                <h2 class="text-lg font-semibold mb-3 flex items-center">[ Civilization Indicators ]</h2>
                 <div class="grid grid-cols-2 gap-3 text-sm mb-4">
-<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 资源 ──┐
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌ Resources ┐
 │ <span id="resources">50</span>
-└────────┘</pre>
-<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 环境 ──┐
+└────────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌ Environment┐
 │ <span id="environment">50</span>
-└────────┘</pre>
-<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 经济 ──┐
+└─────────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── Economy ┐
 │ <span id="economy">50</span>
-└────────┘</pre>
-<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 文化 ──┐
+└────────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── Culture ┐
 │ <span id="culture">50</span>
-└────────┘</pre>
-<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 军力 ──┐
+└────────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌─ Military ┐
 │ <span id="military">50</span>
-└────────┘</pre>
-<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 民心 ──┐
+└────────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌ Happiness ┐
 │ <span id="happiness">50</span>
-└────────┘</pre>
-<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌── 外交 ──┐
+└────────────┘</pre>
+<pre class="bg-dark/70 rounded-lg p-3 border border-gray-800 text-xs leading-5 whitespace-pre-wrap">┌ Diplomacy ┐
 │ <span id="diplomacy">50</span>
-└────────┘</pre>
+└────────────┘</pre>
                 </div>
-                <h2 class="text-lg font-semibold mb-3 flex items-center">[ 符号说明 ]</h2>
+                <h2 class="text-lg font-semibold mb-3 flex items-center">[ Symbol Legend ]</h2>
                 <div class="space-y-2 text-sm font-mono">
-                    <div>[定居势场纹理] 聚落影响范围（密度越高字符越粗）</div>
-                    <div>[技术扩散纹理] 网络/创新传播（+ 与 * 的密度）</div>
-                    <div>[防御密度纹理] 要塞带（# 阶梯分布）</div>
-                    <div>[治理枢纽纹理] 枢纽及通道（H 与 - 的组合）</div>
-                    <div>[冲突裂痕纹理] 张力与断裂（x/X 断裂带）</div>
-                    <div>[突破星云纹理] 突破溢出范围（* 星簇）</div>
+                    <div>[Settlement Field] Settlement influence (denser = stronger)</div>
+                    <div>[Tech Diffusion] Network/innovation spread (+ and * density)</div>
+                    <div>[Defense Density] Fortress zones (# gradient)</div>
+                    <div>[Governance Hubs] Hubs and channels (H and - patterns)</div>
+                    <div>[Conflict Rifts] Tension and fractures (x/X fault lines)</div>
+                    <div>[Breakthrough Nebula] Breakthrough overflow (* clusters)</div>
                 </div>
                 
                 <hr class="my-4 border-gray-800">
                 
-                <!-- 生命周期指示器 -->
-                <h2 class="text-lg font-semibold mb-3 flex items-center">[ 文明生命周期 ]</h2>
+                <!-- Civilization Lifecycle Indicator -->
+                <h2 class="text-lg font-semibold mb-3 flex items-center">[ Civilization Lifecycle ]</h2>
                 <div class="relative pt-1">
                     <div class="flex mb-2 items-center justify-between">
                         <div>
                             <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-primary/80 bg-primary/10">
-                                生命周期
+                                Lifecycle
                             </span>
                         </div>
                         <div class="text-right">
@@ -311,17 +311,17 @@
                     </div>
                     <pre id="lifespan-ascii" class="font-mono text-xs text-green-400"></pre>
                 </div>
-                <p id="life-stage" class="text-center text-sm text-gray-400 italic">等待文明诞生...</p>
+                <p id="life-stage" class="text-center text-sm text-gray-400 italic">Awaiting civilization birth...</p>
             </div>
         </div>
     </main>
 
-    <!-- 关于模态框已禁用 -->
+    <!-- About modal disabled -->
 
     <script>
-        // 文明模拟器核心逻辑
+        // Civilization Simulator Core Logic
         document.addEventListener('DOMContentLoaded', () => {
-            // DOM元素引用
+            // DOM Element References
             const startBtn = document.getElementById('start-btn');
             const pauseBtn = document.getElementById('pause-btn');
             const speedBtn = document.getElementById('speed-btn');
@@ -347,19 +347,19 @@
             const lifespanPercentage = document.getElementById('lifespan-percentage');
             const lifeStageEl = document.getElementById('life-stage');
             const aboutModal = null;
-            // 将可视层包裹以产生镜头漂移
+            // Wrap visual layers to create camera drift effect
             try {
                 const area = document.getElementById('simulation-area');
                 const cam = document.createElement('div');
                 cam.setAttribute('id','camera-content');
                 cam.setAttribute('class','absolute inset-0 cam-drift');
-                // 把主要层移动到 camera-content 下
+                // Move main layers under camera-content
                 const moveIds = ['civilization-symbols','ascii-overlays','ascii-canvas','ascii-overlays-enemy','ascii-canvas-enemy'];
                 moveIds.forEach(id=>{ const el = document.getElementById(id); if(el){ cam.appendChild(el); }});
                 area.insertBefore(cam, area.firstChild);
             } catch {}
             
-            // 模拟状态变量
+            // Simulation State Variables
             let isRunning = false;
             let simulationSpeed = 1; // 1x, 2x, 4x, 8x
             let simulationInterval;
@@ -367,13 +367,13 @@
             let year = 0;
             let totalDays = 0;
             let aiEnabled = false;
-            let aiFrequency = 3; // 天
+            let aiFrequency = 3; // days
             let aiPending = false;
             let mode = 'normal';
             let autosaveEnabled = true;
             let guidelines = '';
             
-            // 文明属性
+            // Civilization Attributes
             let civilization = {
                 population: 10,
                 technology: 0,
@@ -387,12 +387,12 @@
                 diplomacy: 50,
                 settlements: [],
                 events: [],
-                stage: 0, // 0-4对应五个文明阶段
-                lifespan: Math.floor(Math.random() * 3000) + 2000, // 文明预期寿命(天)
+                stage: 0, // 0-4 corresponds to five civilization stages
+                lifespan: Math.floor(Math.random() * 3000) + 2000, // Civilization expected lifespan (days)
                 isDeclining: false,
                 lastEventDay: 0
             };
-            // 敌方属性
+            // Enemy Attributes
             let enemy = {
                 population: 8,
                 technology: 0,
@@ -409,17 +409,17 @@
                 isDeclining: false
             };
             
-            // 文明符号类型定义
+            // Civilization Symbol Type Definitions
             const symbolTypes = [
-                { type: 'settlement', label: '●', color: 'bg-success/20 text-success', chance: 30 },       // 定居点
-                { type: 'technology', label: '△', color: 'bg-primary/20 text-primary', chance: 20 },     // 技术
-                { type: 'defense', label: '□', color: 'bg-secondary/20 text-secondary', chance: 15 },     // 防御
-                { type: 'government', label: '◆', color: 'bg-warning/20 text-warning', chance: 15 },      // 治理
-                { type: 'conflict', label: '✕', color: 'bg-danger/20 text-danger', chance: 10 },          // 冲突
-                { type: 'breakthrough', label: '★', color: 'bg-purple-500/20 text-purple-400', chance: 10 } // 突破
+                { type: 'settlement', label: '●', color: 'bg-success/20 text-success', chance: 30 },       // Settlement
+                { type: 'technology', label: '△', color: 'bg-primary/20 text-primary', chance: 20 },     // Technology
+                { type: 'defense', label: '□', color: 'bg-secondary/20 text-secondary', chance: 15 },     // Defense
+                { type: 'government', label: '◆', color: 'bg-warning/20 text-warning', chance: 15 },      // Government
+                { type: 'conflict', label: '✕', color: 'bg-danger/20 text-danger', chance: 10 },          // Conflict
+                { type: 'breakthrough', label: '★', color: 'bg-purple-500/20 text-purple-400', chance: 10 } // Breakthrough
             ];
 
-            // Cloud Function 接口（自动选择本地或线上）
+            // Cloud Function Interface (auto-select local or online)
             const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
             const EVOLVE_ENDPOINT = isLocal
                 ? 'http://localhost:5001/chat-294cc/us-central1/evolve'
@@ -465,68 +465,68 @@
             let localInfluenceGrid = new Array(FIELD_CANVAS_ROWS).fill(null);
             let enemyInfluenceGrid = new Array(FIELD_CANVAS_ROWS).fill(null);
             
-            // 事件类型
+            // Event Types
             const eventTypes = [
                 { 
                     type: 'positive',
                     messages: [
-                        '发现了丰富的资源储备，促进了经济增长',
-                        '重要的技术突破推动了文明进步',
-                        '和平条约的签订带来了稳定的发展环境',
-                        '农业革新大幅提高了粮食产量',
-                        '杰出领袖出现，增强了社会凝聚力',
-                        '新的能源来源被发现',
-                        '医学进步延长了平均寿命',
-                        '文化繁荣，艺术与科学齐头并进'
+                        'Rich resource reserves discovered, promoting economic growth',
+                        'Major technological breakthrough drives civilization progress',
+                        'Peace treaty signing brings stable development environment',
+                        'Agricultural innovation dramatically increases food production',
+                        'Outstanding leader emerges, strengthening social cohesion',
+                        'New energy source discovered',
+                        'Medical advances extend average lifespan',
+                        'Cultural prosperity, arts and sciences flourish together'
                     ],
                     effects: { population: 5, technology: 3, stability: 5 }
                 },
                 { 
                     type: 'negative',
                     messages: [
-                        '自然灾害导致了重大损失',
-                        '资源短缺引发社会动荡',
-                        '内部冲突削弱了文明凝聚力',
-                        '疾病流行导致人口减少',
-                        '技术停滞不前，发展陷入瓶颈',
-                        '外部威胁加剧了紧张局势',
-                        '环境恶化开始影响生存条件',
-                        '经济危机导致生活水平下降'
+                        'Natural disaster causes major losses',
+                        'Resource shortage triggers social unrest',
+                        'Internal conflict weakens civilization cohesion',
+                        'Disease epidemic leads to population decline',
+                        'Technology stagnates, development hits bottleneck',
+                        'External threats intensify tensions',
+                        'Environmental degradation begins affecting survival',
+                        'Economic crisis reduces living standards'
                     ],
                     effects: { population: -5, technology: -2, stability: -8 }
                 },
                 { 
                     type: 'neutral',
                     messages: [
-                        '举行了一次重要的文化庆典',
-                        '新的社会习俗开始形成',
-                        '探索队发现了未知的区域',
-                        '新的艺术流派开始流行',
-                        '传统知识得到整理和保存',
-                        '气候出现轻微变化',
-                        '新的贸易路线被开辟',
-                        '教育体系进行了改革'
+                        'Important cultural celebration held',
+                        'New social customs begin forming',
+                        'Exploration team discovers unknown regions',
+                        'New artistic movement gains popularity',
+                        'Traditional knowledge compiled and preserved',
+                        'Climate shows minor changes',
+                        'New trade routes established',
+                        'Education system undergoes reform'
                     ],
                     effects: { population: 1, technology: 1, stability: 0 }
                 }
             ];
             
-            // 文明阶段定义
+            // Civilization Stage Definitions
             const civilizationStages = [
-                { name: '原始社会', minTech: 0, maxTech: 20, color: '#00B42A' },
-                { name: '农业社会', minTech: 20, maxTech: 40, color: '#722ED1' },
-                { name: '工业革命', minTech: 40, maxTech: 60, color: '#FF7D00' },
-                { name: '信息时代', minTech: 60, maxTech: 80, color: '#165DFF' },
-                { name: '太空时代', minTech: 80, maxTech: 100, color: '#86909C' }
+                { name: 'Primitive', minTech: 0, maxTech: 20, color: '#00B42A' },
+                { name: 'Agricultural', minTech: 20, maxTech: 40, color: '#722ED1' },
+                { name: 'Industrial', minTech: 40, maxTech: 60, color: '#FF7D00' },
+                { name: 'Information', minTech: 60, maxTech: 80, color: '#165DFF' },
+                { name: 'Space Age', minTech: 80, maxTech: 100, color: '#86909C' }
             ];
             
-            // 生命周期阶段
+            // Lifecycle Stages
             const lifeStages = [
-                { name: '诞生期', range: [0, 0.1] },
-                { name: '成长期', range: [0.1, 0.4] },
-                { name: '繁荣期', range: [0.4, 0.7] },
-                { name: '衰退期', range: [0.7, 0.9] },
-                { name: '末期', range: [0.9, 1.0] }
+                { name: 'Birth', range: [0, 0.1] },
+                { name: 'Growth', range: [0.1, 0.4] },
+                { name: 'Prosperity', range: [0.4, 0.7] },
+                { name: 'Decline', range: [0.7, 0.9] },
+                { name: 'Terminal', range: [0.9, 1.0] }
             ];
             
             // 初始化
@@ -558,7 +558,7 @@
                 
                 // 清空符号和事件
                 civilizationSymbols.innerHTML = '';
-                eventLogEl.innerHTML = '<p class="text-gray-400 italic">模拟开始后将显示文明发展事件...</p>';
+                eventLogEl.innerHTML = '<p class="text-gray-400 italic">Civilization development events will appear after simulation starts...</p>';
                 // 清空抽象覆盖层
                 localOverlays = { routes: [], regions: [], labels: [], structures: [], canvas: null };
                 lastAIOverlays = null;
@@ -603,7 +603,7 @@
                     // 创建初始定居点
                     addSymbol('settlement', 50, 50);
                     addEnemySymbol('settlement', 72, 52);
-                    addEvent('neutral', '文明在这片土地上诞生了');
+                    addEvent('neutral', 'A civilization is born on this land');
                     
                     // 隐藏加载状态
                     loadingOverlay.classList.add('hidden');
@@ -613,7 +613,7 @@
             // 更新UI显示
             function updateUI() {
                 // 更新时间显示
-                simulationTimeEl.textContent = `${year}年${day}天`;
+                simulationTimeEl.textContent = `${year}Y ${day}D`;
                 
                 // 更新文明属性
                 populationEl.textContent = formatNumber(civilization.population);
@@ -642,7 +642,7 @@
                 const eventEl = document.createElement('pre');
                 eventEl.className = 'font-mono text-xs p-2 rounded-lg bg-gray-800/60 text-gray-300 whitespace-pre-wrap';
                 const prefix = eventType === 'positive' ? '[+]' : eventType === 'negative' ? '[-]' : '[*]';
-                eventEl.textContent = `${prefix} ${year}年${day}天 | ${message}`;
+                eventEl.textContent = `${prefix} Y${year}D${day} | ${message}`;
                 if (eventLogEl.firstChild) {
                     eventLogEl.insertBefore(eventEl, eventLogEl.firstChild);
                 } else {
@@ -727,11 +727,11 @@
                 if (Array.isArray(result.events)) {
                     result.events.slice(0, 4).forEach(ev => {
                         const t = ev?.type === 'positive' || ev?.type === 'negative' ? ev.type : 'neutral';
-                        addNarrativeEvent(t, ev?.message || 'AI生成的事件');
+                        addNarrativeEvent(t, ev?.message || 'AI-generated event');
                     });
                 }
                 if (result.battle && result.battle.summary) {
-                    addNarrativeEvent('neutral', `战报: ${result.battle.summary}`);
+                    addNarrativeEvent('neutral', `Battle Report: ${result.battle.summary}`);
                 }
                 // 计算 AI 心情（基于正负事件占比与稳定性）
                 try {
@@ -1268,7 +1268,7 @@
 
             function updateAIMood(score) {
                 const face = score > 70 ? ':)' : score < 30 ? ':(' : ':|';
-                const label = score > 70 ? '乐观' : score < 30 ? '谨慎' : '平稳';
+                const label = score > 70 ? 'Optimistic' : score < 30 ? 'Cautious' : 'Stable';
                 const total = 14; // 进度格数
                 const filled = Math.round((score / 100) * total);
                 const bar = `[${'#'.repeat(filled)}${'.'.repeat(total - filled)}] ${Math.round(score)}%`;
@@ -1280,37 +1280,37 @@
                 if (barEl) barEl.textContent = bar;
             }
 
-            // 生成模拟的AI响应
+            // Generate Mock AI Response
             function generateMockAIResponse() {
                 const positiveEvents = [
-                    '科技突破带来了生产力的飞跃',
-                    '外交使团成功建立了贸易联盟',
-                    '农业改革使粮食产量大幅提升',
-                    '文化复兴运动提振了社会士气',
-                    '新型能源的发现改变了工业格局',
-                    '教育改革培养出大批人才',
-                    '医疗技术突破延长了人民寿命',
-                    '基础设施建设加强了区域联系'
+                    'Technological breakthrough leads to productivity leap',
+                    'Diplomatic mission successfully establishes trade alliance',
+                    'Agricultural reform dramatically increases food production',
+                    'Cultural renaissance movement boosts social morale',
+                    'Discovery of new energy source transforms industry',
+                    'Education reform cultivates talented workforce',
+                    'Medical breakthrough extends population lifespan',
+                    'Infrastructure development strengthens regional connections'
                 ];
                 const negativeEvents = [
-                    '资源枯竭引发了经济危机',
-                    '环境污染开始影响民众健康',
-                    '社会矛盾激化导致动荡',
-                    '外部势力的威胁日益严峻',
-                    '腐败现象削弱了政府公信力',
-                    '自然灾害造成重大损失',
-                    '技术发展停滞不前',
-                    '贸易摩擦损害了经济利益'
+                    'Resource depletion triggers economic crisis',
+                    'Environmental pollution begins affecting public health',
+                    'Social tensions escalate leading to unrest',
+                    'External threats become increasingly severe',
+                    'Corruption weakens government credibility',
+                    'Natural disaster causes major losses',
+                    'Technological development stagnates',
+                    'Trade friction damages economic interests'
                 ];
                 const neutralEvents = [
-                    '举办了盛大的文化庆典活动',
-                    '新的思想流派开始传播',
-                    '探险队发现了未知的领域',
-                    '艺术家创作出震撼人心的作品',
-                    '历史文献得到系统整理',
-                    '气候模式出现了微妙变化',
-                    '新的商路被开辟出来',
-                    '社会习俗发生了渐进式变革'
+                    'Grand cultural celebration held',
+                    'New philosophical movement begins spreading',
+                    'Expedition discovers unknown territories',
+                    'Artists create stunning masterpieces',
+                    'Historical documents systematically archived',
+                    'Climate patterns show subtle changes',
+                    'New trade routes opened',
+                    'Social customs undergo gradual transformation'
                 ];
 
                 // 根据当前状态生成变化
@@ -1390,14 +1390,14 @@
                     });
                 }
 
-                // 战斗报告
+                // Battle Reports
                 const battleSummaries = [
-                    '边境地区发生小规模冲突，双方各有损伤',
-                    '外交谈判取得进展，紧张局势有所缓和',
-                    '军事演习展示了双方的实力',
-                    '资源争夺战在边境地区持续',
-                    '文化交流增进了双方理解',
-                    '贸易往来为双方带来利益'
+                    'Small-scale conflict at border, both sides suffer casualties',
+                    'Diplomatic negotiations progress, tensions ease',
+                    'Military exercises demonstrate power of both sides',
+                    'Resource conflict continues at border regions',
+                    'Cultural exchange improves mutual understanding',
+                    'Trade brings benefits to both sides'
                 ];
 
                 return {
@@ -1458,7 +1458,7 @@
                         data = await resp.json();
                     } catch (fetchError) {
                         // 后端连接失败，使用模拟数据
-                        console.log('使用模拟AI数据（后端暂时不可用）');
+                        console.log('Using mock AI data (backend temporarily unavailable)');
                         data = generateMockAIResponse();
                     }
                     
@@ -1494,7 +1494,7 @@
                 // 如果阶段变化，记录事件
                 if (newStage !== civilization.stage) {
                     civilization.stage = newStage;
-                    addEvent('positive', `文明进入了${civilizationStages[newStage].name}`);
+                    addEvent('positive', `Civilization enters ${civilizationStages[newStage].name} Age`);
                     
                     // 改变进度条颜色
                     if (civilizationStageEl) {
@@ -1529,7 +1529,7 @@
                 const percent = Math.min(100, Math.max(0, civilization.technology));
                 const filled = Math.round((percent / 100) * totalBlocks);
                 const bar = `[${'#'.repeat(filled)}${'.'.repeat(totalBlocks - filled)}] ${Math.round(percent)}%`;
-                const label = ['原','农','工','信','空'][civilization.stage] || '';
+                const label = ['Pri','Agr','Ind','Inf','Spa'][civilization.stage] || '';
                 const el = document.getElementById('ascii-stage-bar');
                 if (el) el.textContent = `${bar} <${label}>`;
             }
@@ -1552,17 +1552,17 @@
                         break;
                     }
                 }
-                lifeStageEl.textContent = `当前阶段: ${currentStage}`;
+                lifeStageEl.textContent = `Current Stage: ${currentStage}`;
                 
                 // 检查是否进入衰退期
                 if (percentage > 70 && !civilization.isDeclining) {
                     civilization.isDeclining = true;
-                    addEvent('negative', '文明开始显示衰退迹象');
+                    addEvent('negative', 'Civilization begins showing signs of decline');
                 }
                 
                 // 检查文明是否终结
                 if (percentage >= 100) {
-                    addEvent('negative', '文明走到了历史的尽头');
+                    addEvent('negative', 'Civilization has reached the end of its history');
                     pauseSimulation();
                     
                     // 添加一个终结符号
@@ -1668,7 +1668,7 @@
                 const eventEl = document.createElement('pre');
                 eventEl.className = 'font-mono text-xs p-2 rounded-lg bg-gray-800/60 text-gray-300 whitespace-pre-wrap';
                 const prefix = eventType === 'positive' ? '[+]' : eventType === 'negative' ? '[-]' : '[*]';
-                eventEl.textContent = `${prefix} ${year}年${day}天 | ${message}`;
+                eventEl.textContent = `${prefix} Y${year}D${day} | ${message}`;
                 
                 // 添加到日志顶部
                 if (eventLogEl.firstChild) {
@@ -1821,7 +1821,7 @@
             function toggleAI() {
                 aiEnabled = !aiEnabled;
                 const aiText = document.getElementById('ai-toggle-text');
-                aiText.textContent = aiEnabled ? 'AI演化 开启' : 'AI演化 关闭';
+                aiText.textContent = aiEnabled ? 'AI Evolution ON' : 'AI Evolution OFF';
                 const btn = document.getElementById('ai-toggle-btn');
                 if (aiEnabled) {
                     btn.classList.remove('bg-gray-700');
@@ -1893,7 +1893,7 @@
             document.getElementById('ai-trigger-btn').addEventListener('click', () => { triggerAI(); });
             document.getElementById('mode-select').addEventListener('change', (e) => {
                 mode = e.target.value;
-                addNarrativeEvent('neutral', `模式切换为：${mode === 'peace' ? '和平' : mode === 'disaster' ? '灾变' : '标准'}`);
+                addNarrativeEvent('neutral', `Mode switched to: ${mode === 'peace' ? 'Peace' : mode === 'disaster' ? 'Disaster' : 'Normal'}`);
             });
             document.getElementById('autosave-toggle').addEventListener('change', (e) => {
                 autosaveEnabled = !!e.target.checked;
