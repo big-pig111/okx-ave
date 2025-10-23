@@ -1795,8 +1795,8 @@
                 startBtn.classList.add('hidden');
                 pauseBtn.classList.remove('hidden');
                 
-                // 根据速度设置间隔 (1x = 1秒 = 1天)
-                const intervalTime = 1000 / simulationSpeed;
+                // 根据速度设置间隔 (1x = 3秒 = 1天，速度调慢三倍)
+                const intervalTime = 3000 / simulationSpeed;
                 
                 simulationInterval = setInterval(simulateDay, intervalTime);
             }
@@ -1827,7 +1827,7 @@
                 // 如果正在运行，重新启动间隔以应用新速度
                 if (isRunning) {
                     clearInterval(simulationInterval);
-                    const intervalTime = 1000 / simulationSpeed;
+                    const intervalTime = 3000 / simulationSpeed;
                     simulationInterval = setInterval(simulateDay, intervalTime);
                 }
             }
